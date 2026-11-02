@@ -1,4 +1,4 @@
-# ADR-006: Login con el proveedor de identidad institucional (OpenID Connect o SAML)
+# ADR-006: Login con la cuenta institucional a través del proveedor de la Universidad
 
 ## Estado
 
@@ -13,7 +13,7 @@ Esto hace parte de [PA-02](../drivers.md#4-preocupaciones-arquitectónicas) (có
 ## Alternativas consideradas
 
 1. **Consultar el directorio (LDAP) con el usuario y la contraseña que se escriben en nuestro formulario.** Es fácil si el directorio está disponible, pero la contraseña institucional pasaría por nuestro sistema, y si tenemos un fallo de seguridad se expone. Tampoco es un inicio de sesión único de verdad.
-2. **Federación con el proveedor de identidad institucional usando un estándar (OpenID Connect, o SAML si es lo único que hay).** El usuario se autentica en la página de la Universidad y nosotros solo recibimos una respuesta firmada con su identidad; nunca vemos la contraseña. Se aprovechan las políticas que ya tiene la Universidad (doble factor, bloqueos), y hay librerías libres para ambos. La desventaja es que dependemos de que la Universidad registre el sistema, y si su proveedor se cae nadie interno puede entrar.
+2. **Federación con el proveedor de identidad institucional usando el protocolo estándar que tenga la Universidad.** El usuario se autentica en la página de la Universidad y nosotros solo recibimos una respuesta firmada con su identidad; nunca vemos la contraseña. Se aprovechan las políticas que ya tiene la Universidad (doble factor, bloqueos), y hay librerías libres para hacerlo. La desventaja es que dependemos de que la Universidad registre el sistema, y si su proveedor se cae nadie interno puede entrar.
 
 (No consideramos cuentas propias con contraseña porque RT-02 las descarta.)
 

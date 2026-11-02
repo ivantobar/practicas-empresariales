@@ -18,12 +18,12 @@ Necesitamos una sola forma de manejar las fallas del SIA y del correo: reintento
 
 ## Decisión
 
-Elegimos la opción 3. Toda llamada externa que pueda fallar (verificar en el SIA, mandar correos) se guarda como trabajo pendiente en la misma transacción del caso de uso. Una tarea programada revisa la tabla cada minuto y reintenta con esperas crecientes (1, 2, 5 y 10 minutos, y después cada 10 minutos). Así, cuando el SIA vuelve, los pendientes se verifican en el siguiente ciclo, dentro de los 30 minutos de EAC-02. Los mensajes al usuario para estados pendientes se definen una sola vez y los usan todos los casos de uso.
+Elegimos la opción 3. Toda llamada externa que pueda fallar (verificar en el SIA, mandar correos) se guarda como trabajo pendiente en la misma transacción del caso de uso. Una tarea programada revisa la tabla cada minuto y vuelve a intentar los que fallaron, esperando un poco más cada vez. Así, cuando el SIA vuelve, los pendientes se verifican en el siguiente ciclo, dentro de los 30 minutos de EAC-02. Los mensajes al usuario para estados pendientes se definen una sola vez y los usan todos los casos de uso.
 
 ## Consecuencias
 
 **Positivas:** una sola estrategia de fallas para todo el sistema; no se pierden trabajos por reinicios ni caídas; la mesa de ayuda puede ver por qué un trámite sigue pendiente.
 
-**Negativas:** es código propio que mantener (el procesador, los reintentos y el bloqueo para que dos procesos no tomen el mismo trabajo), cosas que un bróker ya trae. Puede haber hasta un minuto de retraso entre que el SIA vuelve y el siguiente intento. La tabla crece y hay que limpiarla cada cierto tiempo.
+**Negativas:** es código propio que hay que mantener, cosas que un bróker ya trae hechas. Puede haber hasta un minuto de retraso entre que el SIA vuelve y el siguiente intento. La tabla crece y hay que limpiarla cada cierto tiempo.
 
 **Riesgos:** que un trabajo falle siempre (por datos malos) y se quede reintentando para siempre. Después de 24 horas pasa a "fallido" y se avisa al administrador. Si el volumen creciera mucho más que S-03, se cambiaría por un bróker con un ADR nuevo.

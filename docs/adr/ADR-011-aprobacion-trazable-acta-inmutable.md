@@ -1,4 +1,4 @@
-# ADR-011: Aprobación trazable del acta con hash del documento, y acta inmutable
+# ADR-011: Aprobación trazable del acta y acta que no se puede modificar
 
 ## Estado
 
@@ -17,7 +17,7 @@ El docente asesor y el director de programa aprueban el acta electrónicamente (
 ## Alternativas consideradas
 
 1. **Marcar el acta como "aprobada" con un campo en la base de datos.** Es lo más simple, pero no demuestra qué documento exacto se aprobó, y el acta podría cambiar después sin que nadie se dé cuenta. No cumple RN-02 ni sirve como evidencia para OB-06.
-2. **Aprobación trazable con el hash del documento y acta inmutable.** Al aprobar se guarda quién (con la identidad institucional de [ADR-006](ADR-006-autenticacion-institucional.md)), cuándo, desde dónde y el hash SHA-256 del PDF. Cuando los dos aprueban, el acta ya no se puede modificar ni borrar. Así se demuestra qué documento se aprobó y que no cambió, y sin pagar nada. Pero vale menos legalmente que una firma certificada.
+2. **Aprobación trazable y acta que no se puede modificar.** Al aprobar se guarda quién (con la identidad institucional de [ADR-006](ADR-006-autenticacion-institucional.md)), cuándo, desde dónde y una huella digital del PDF (un código que cambia si el archivo cambia aunque sea un poquito). Cuando los dos aprueban, el acta ya no se puede modificar ni borrar. Así se demuestra qué documento se aprobó y que no cambió, y sin pagar nada. Pero vale menos legalmente que una firma certificada.
 3. **Firma digital certificada con una entidad de certificación.** Es lo que más vale legalmente, pero está fuera del alcance, cuesta (RN-05), y según S-06 no hace falta.
 
 ## Decisión

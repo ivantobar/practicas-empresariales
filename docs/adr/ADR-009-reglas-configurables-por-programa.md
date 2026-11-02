@@ -14,7 +14,7 @@ El driver más fuerte aquí es [EAC-01](../drivers.md#eac-01-mantenibilidad-modi
 
 1. **Reglas en el código con condiciones por programa.** Es lo más rápido al principio, pero cada programa nuevo obliga a cambiar código en todas partes donde se validan reglas, y un error puede dañar otros programas. No cumple EAC-01.
 2. **Parámetros por programa en la base de datos, con versión y fecha de vigencia, más validadores intercambiables (patrón estrategia) en el módulo de reglas.** Los valores (horas, créditos, promedio, plazos) los cambia el director sin programar. Un tipo de requisito nuevo es un validador nuevo dentro del mismo módulo. Y cada práctica queda amarrada a la versión de reglas con la que se postuló, entonces un cambio no afecta las que están en curso. Requiere más diseño al inicio y el versionado complica las consultas.
-3. **Un motor de reglas como Drools.** Permite reglas de cualquier tipo sin programar, pero es otra tecnología que aprender y operar, puede que no esté en el catálogo ([RT-04](../drivers.md#3-restricciones)), y las reglas en su lenguaje son más difíciles de probar. Nuestras reglas (horas, créditos, promedio, materias) no son tan variadas como para justificarlo.
+3. **Un motor de reglas externo.** Permite reglas de cualquier tipo sin programar, pero es otra tecnología que aprender y operar, puede que no esté en el catálogo ([RT-04](../drivers.md#3-restricciones)), y las reglas en su lenguaje son más difíciles de probar. Nuestras reglas (horas, créditos, promedio, materias) no son tan variadas como para justificarlo.
 
 ## Decisión
 

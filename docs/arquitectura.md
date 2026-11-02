@@ -37,12 +37,12 @@ Las decisiones están en la carpeta [`adr/`](adr/), un archivo por decisión. Si
 | [ADR-003](adr/ADR-003-persistencia-relacional.md) | Base de datos relacional de código abierto del catálogo institucional | Aceptado | RT-04, RN-05 |
 | [ADR-004](adr/ADR-004-integracion-sia.md) | Integración con el SIA por un adaptador y verificación diferida | Aceptado | CU-01, EAC-02, RT-03 |
 | [ADR-005](adr/ADR-005-reintentos-y-estados-pendientes.md) | Cola de trabajos pendientes en la base de datos para las fallas de integración | Aceptado | PA-04, EAC-02 |
-| [ADR-006](adr/ADR-006-autenticacion-institucional.md) | Login con el proveedor de identidad institucional (OpenID Connect o SAML) | Aceptado | RT-02, PA-02 |
+| [ADR-006](adr/ADR-006-autenticacion-institucional.md) | Login con la cuenta institucional a través del proveedor de la Universidad | Aceptado | RT-02, PA-02 |
 | [ADR-007](adr/ADR-007-enlace-unico-supervisores.md) | Enlaces de un solo uso con vencimiento para los supervisores de empresa | Aceptado | CU-07, EAC-03, RN-04, PA-02 |
 | [ADR-008](adr/ADR-008-autorizacion-por-roles.md) | Permisos por rol y ámbito, manejados dentro del sistema | Aceptado | PA-02, RN-01 |
 | [ADR-009](adr/ADR-009-reglas-configurables-por-programa.md) | Reglas de práctica configurables y versionadas por programa | Aceptado | CU-12, EAC-01 |
 | [ADR-010](adr/ADR-010-acta-desde-plantilla.md) | Generar el acta desde una plantilla HTML separada del código | Aceptado | CU-09, RN-03, RN-05 |
-| [ADR-011](adr/ADR-011-aprobacion-trazable-acta-inmutable.md) | Aprobación trazable del acta con hash del documento, y acta inmutable | Aceptado | CU-10, RN-02, RN-05 |
+| [ADR-011](adr/ADR-011-aprobacion-trazable-acta-inmutable.md) | Aprobación trazable del acta y acta que no se puede modificar | Aceptado | CU-10, RN-02, RN-05 |
 | [ADR-012](adr/ADR-012-bitacora-auditoria.md) | Bitácora de auditoría de solo inserción en la base de datos | Aceptado | PA-03, EAC-03, RN-01 |
 | [ADR-013](adr/ADR-013-migracion-desde-excel.md) | Migración con una plantilla Excel estándar y un importador que valida | Aceptado | PA-05 |
 

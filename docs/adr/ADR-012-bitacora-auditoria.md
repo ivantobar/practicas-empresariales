@@ -18,7 +18,7 @@ Hay que decidir qué se registra, dónde y por cuánto tiempo ([PA-03](../driver
 
 1. **Los archivos de log del servidor.** Ya existen y no hay que hacer nada, pero son texto libre difícil de consultar en una auditoría, se rotan y se borran, y cualquiera con acceso al servidor los puede editar. No sirven como evidencia.
 2. **Una tabla de bitácora de solo inserción en la base de datos, escrita en la misma transacción del evento, y los logs técnicos aparte.** Los eventos se consultan con SQL; si la operación se guarda, su registro también (y si falla, ninguno); el usuario de la aplicación no puede modificar ni borrar filas. No agrega infraestructura ([ADR-003](ADR-003-persistencia-relacional.md)). Cada operación hace una escritura más y la tabla crece todo el tiempo.
-3. **Una plataforma de logs como Elasticsearch, Logstash y Kibana.** Tiene búsquedas y tableros muy buenos, pero son varios servidores que operar, demasiado para la carga de [S-03](../vision.md#6-supuestos-y-riesgos-iniciales) ([R-04](../vision.md#6-supuestos-y-riesgos-iniciales)), y es fácil que termine guardando datos personales sin control.
+3. **Una plataforma especializada de logs.** Tiene búsquedas y tableros muy buenos, pero son varios servidores que operar, demasiado para la carga de [S-03](../vision.md#6-supuestos-y-riesgos-iniciales) ([R-04](../vision.md#6-supuestos-y-riesgos-iniciales)), y es fácil que termine guardando datos personales sin control.
 
 ## Decisión
 
