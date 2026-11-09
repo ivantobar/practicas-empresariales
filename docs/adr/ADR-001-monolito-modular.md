@@ -27,3 +27,5 @@ Elegimos la opción 2. Las reglas quedan en su propio módulo y el resto no se e
 **Negativas:** hay más código de "soporte" (interfaces, adaptadores, mapeos). Si algún día un módulo necesita mucha más capacidad, toca escalar todo el sistema. Y nada en el lenguaje impide que un módulo use cosas internas de otro: depende de la disciplina del equipo.
 
 **Riesgos:** que con el tiempo los módulos se acoplen. Para evitarlo ponemos pruebas de arquitectura que fallen si un módulo importa el interior de otro. Si la carga real fuera mucho mayor que S-03, se separaría un módulo con un ADR nuevo.
+
+**Vistas que modifica:** [Procesos](../vistas/02-procesos.md), [Desarrollo](../vistas/03-desarrollo.md), [Física](../vistas/04-fisica.md).

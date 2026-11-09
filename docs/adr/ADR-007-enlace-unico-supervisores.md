@@ -30,3 +30,5 @@ Elegimos la opción 2 porque cumple EAC-03 y RN-04 con lo mínimo de esfuerzo pa
 **Negativas:** la seguridad depende del correo del supervisor: quien entre a su buzón puede evaluar por él. Lo aceptamos porque RN-04 no deja poner un segundo factor propio, y de todas formas el docente asesor revisa la evaluación antes del acta. También, cada validación semanal manda un correo, lo que puede cansar a supervisores con varios practicantes. Y hay que hacer el flujo para pedir un enlace nuevo.
 
 **Riesgos:** que los correos lleguen a spam. Se mandan desde el dominio institucional y con copia al docente asesor, como dice R-01.
+
+**Vistas que modifica:** [Contexto](../contexto.md), [Lógica](../vistas/01-logica.md), [Desarrollo](../vistas/03-desarrollo.md). Se ve en ESC-02 ([cu07-evaluar-practicante](../diagramas/secuencias/cu07-evaluar-practicante.puml)).

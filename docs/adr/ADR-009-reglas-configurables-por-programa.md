@@ -27,3 +27,5 @@ Elegimos la opción 2. El módulo de reglas guarda, por programa, versiones de r
 **Negativas:** un tipo de requisito que no existía sí toca programarlo y desplegarlo, la configuración no cubre todo. El versionado hace más complejo el modelo de datos y la pantalla de configuración. Y si el director se equivoca configurando, afecta todas las postulaciones nuevas de su programa; por eso cada versión pide confirmación y queda en la bitácora ([ADR-012](ADR-012-bitacora-auditoria.md)).
 
 **Riesgos:** que el Consejo apruebe reglas que no encajen en los parámetros (por ejemplo, que dependan de la empresa). Antes de cerrar el modelo revisamos el reglamento de todos los programas.
+
+**Vistas que modifica:** [Lógica](../vistas/01-logica.md), [Desarrollo](../vistas/03-desarrollo.md). Se ve en ESC-05 ([cu12-configurar-reglas](../diagramas/secuencias/cu12-configurar-reglas.puml)).

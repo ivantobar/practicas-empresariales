@@ -2,7 +2,7 @@
 Este proyecto contiene la documentación y el código fuente del sistema. Su estructura permite organizar los archivos y facilitar la comprensión y el desarrollo.
 
 
-- `docs/`: Documentación del proyecto, arquitectura y decisiones (ADR).
+- `docs/`: Documentación del proyecto, arquitectura, decisiones (ADR) y vistas (4+1). Los diagramas están en `docs/diagramas/` como archivos `.puml` y se ven en VS Code con la extensión PlantUML.
 - `src/`: Código fuente de la aplicación.
 - `estructura.txt`: Organización de carpetas y archivos.
 

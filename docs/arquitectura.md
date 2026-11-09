@@ -12,7 +12,7 @@ Las restricciones técnicas (RT-01 a RT-04) y de negocio (RN-01 a RN-05), con su
 
 ## 3. Contexto del sistema
 
-*Pendiente.* Se completa en el tema de vistas.
+El contexto (C4, nivel 1) está en [contexto.md](contexto.md), con su diagrama [diagramas/contexto.puml](diagramas/contexto.puml). Ahí el sistema es una caja negra con sus 5 tipos de usuario y 3 sistemas externos (SIA, proveedor de identidad y correo).
 
 ## 4. Estrategia de solución
 
@@ -20,7 +20,58 @@ Las restricciones técnicas (RT-01 a RT-04) y de negocio (RN-01 a RN-05), con su
 
 ## 5. Vistas
 
-*Pendiente.* Se completa en el tema de vistas.
+Usamos el modelo 4+1. Cada vista está en [`vistas/`](vistas/) y su diagrama tiene el mismo nombre en [`diagramas/`](diagramas/) (archivos `.puml`, se ven en VS Code con la extensión PlantUML). Cada una tiene sus 5 partes: diagrama, catálogo, justificación, comportamiento y vistas relacionadas.
+
+| Vista | Para quién | Notación | Documento | Diagrama |
+|---|---|---|---|---|
+| Contexto (marco) | Todos | C4 nivel 1 | [contexto.md](contexto.md) | [contexto.puml](diagramas/contexto.puml) |
+| Lógica | Usuarios y analistas | UML, modelo de dominio | [01-logica.md](vistas/01-logica.md) | [01-logica.puml](diagramas/01-logica.puml) |
+| Procesos | Integradores | C4 nivel 2, contenedores | [02-procesos.md](vistas/02-procesos.md) | [02-procesos.puml](diagramas/02-procesos.puml) |
+| Desarrollo | Programadores | C4 nivel 3, componentes y vista de usos | [03-desarrollo.md](vistas/03-desarrollo.md) | [03-desarrollo.puml](diagramas/03-desarrollo.puml) |
+| Física | Área de Sistemas | C4 despliegue | [04-fisica.md](vistas/04-fisica.md) | [04-fisica.puml](diagramas/04-fisica.puml) |
+| +1 Escenarios | Todos, para validar | UML secuencia arquitectónica | [drivers.md, sección 6](drivers.md#6-escenarios-1) | [secuencias/](diagramas/secuencias/) |
+
+### Matriz de cobertura: drivers y ADR por vista
+
+Revisamos que ningún driver ni ADR quedara sin verse en alguna vista. No hay filas vacías.
+
+| Driver o ADR | Contexto | Lógica | Procesos | Desarrollo | Física | Escenario |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|
+| CU-01 Postularse | ✓ | ✓ | ✓ | ✓ | | ESC-01 |
+| CU-07 Evaluar al practicante | ✓ | ✓ | ✓ | ✓ | | ESC-02 |
+| CU-09 Generar el acta | ✓ | ✓ | ✓ | ✓ | | ESC-03 |
+| CU-10 Aprobar el acta | ✓ | ✓ | | ✓ | | ESC-04 |
+| CU-12 Configurar reglas | ✓ | ✓ | | ✓ | | ESC-05 |
+| EAC-01 Mantenibilidad (16 h, 2 módulos, 0 prácticas afectadas) | | ✓ | | ✓ | | ESC-05 |
+| EAC-02 Fiabilidad (SIA caído, 0 postulaciones perdidas) | | ✓ | ✓ | ✓ | ✓ | ESC-01 |
+| EAC-03 Seguridad (enlace inválido rechazado y registrado) | ✓ | ✓ | ✓ | ✓ | | ESC-02 |
+| RT-01 Infraestructura de la Universidad | | | | | ✓ | |
+| RT-02 Cuenta institucional | ✓ | | ✓ | ✓ | ✓ | |
+| RT-03 Solo servicios del SIA | ✓ | | ✓ | ✓ | ✓ | ESC-01 |
+| RT-04 Catálogo institucional | | | ✓ | | ✓ | |
+| RN-01 Ley 1581 | | ✓ | | ✓ | ✓ | |
+| RN-02 Retención documental | | ✓ | ✓ | | ✓ | ESC-04 |
+| RN-03 Formato del acta | | ✓ | ✓ | ✓ | | ESC-03 |
+| RN-04 Supervisores sin cuenta | ✓ | ✓ | | ✓ | | ESC-02 |
+| RN-05 Sin licencias pagas | | | ✓ | ✓ | ✓ | |
+| PA-01 Estructura general | | | ✓ | ✓ | | |
+| PA-02 Autenticación y autorización | ✓ | ✓ | ✓ | ✓ | | ESC-02, ESC-04 |
+| PA-03 Registro y trazabilidad | | ✓ | ✓ | ✓ | | ESC-02 |
+| PA-04 Manejo de fallas | | | ✓ | ✓ | ✓ | ESC-01 |
+| PA-05 Migración inicial | ✓ | | | ✓ | | |
+| ADR-001 Monolito modular | | | ✓ | ✓ | ✓ | |
+| ADR-002 Despliegue con contenedores | | | | | ✓ | |
+| ADR-003 Base de datos relacional | | | ✓ | ✓ | ✓ | |
+| ADR-004 Integración con el SIA | ✓ | ✓ | ✓ | ✓ | | ESC-01 |
+| ADR-005 Cola de pendientes | | | ✓ | ✓ | ✓ | ESC-01 |
+| ADR-006 Login institucional | ✓ | | ✓ | ✓ | ✓ | |
+| ADR-007 Enlace para supervisores | ✓ | ✓ | | ✓ | | ESC-02 |
+| ADR-008 Roles con ámbito | | ✓ | | ✓ | | ESC-03, ESC-04 |
+| ADR-009 Reglas por programa | | ✓ | | ✓ | | ESC-05 |
+| ADR-010 Acta desde plantilla | | ✓ | ✓ | ✓ | | ESC-03 |
+| ADR-011 Acta que no se modifica | | ✓ | ✓ | | ✓ | ESC-04 |
+| ADR-012 Bitácora | | ✓ | ✓ | ✓ | | ESC-02 |
+| ADR-013 Migración desde Excel | ✓ | | | ✓ | | |
 
 ## 6. Conceptos transversales
 
@@ -28,7 +79,7 @@ Las restricciones técnicas (RT-01 a RT-04) y de negocio (RN-01 a RN-05), con su
 
 ## 7. Decisiones de diseño
 
-Las decisiones están en la carpeta [`adr/`](adr/), un archivo por decisión. Si alguna cambia no se edita el ADR, se hace uno nuevo que lo reemplace.
+Las decisiones están en la carpeta [`adr/`](adr/), un archivo por decisión. Si alguna cambia no se edita el ADR, se hace uno nuevo que lo reemplace. Cada ADR dice al final qué vistas modifica, y la [matriz de la sección 5](#matriz-de-cobertura-drivers-y-adr-por-vista) muestra dónde se ve cada uno.
 
 | ADR | Decisión | Estado | Drivers |
 |---|---|---|---|

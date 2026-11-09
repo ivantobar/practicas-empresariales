@@ -31,3 +31,5 @@ Elegimos la opción 2. El acta se arma con datos que ya están en el sistema (lo
 **Negativas:** las plantillas son una cosa más que versionar y probar, y si una plantilla tiene un error, sale mal en todas las actas que se generen con ella. Qué tan fiel quede el PDF depende de la librería, y un formato muy elaborado puede costar varios ajustes. Además la plantilla la edita un desarrollador, no el Consejo.
 
 **Riesgos:** que el formato oficial no se pueda reproducir bien en HTML a PDF. En la primera iteración hacemos un prototipo del acta y lo validamos con el director de programa.
+
+**Vistas que modifica:** [Lógica](../vistas/01-logica.md), [Procesos](../vistas/02-procesos.md), [Desarrollo](../vistas/03-desarrollo.md). Se ve en ESC-03 ([cu09-generar-acta](../diagramas/secuencias/cu09-generar-acta.puml)).

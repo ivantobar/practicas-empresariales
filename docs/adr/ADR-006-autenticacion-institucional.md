@@ -28,3 +28,5 @@ Elegimos la opción 2. El sistema se registra como aplicación cliente del prove
 **Negativas:** si el proveedor institucional se cae, nadie interno puede entrar (aunque eso le pasa igual a los demás sistemas de la Universidad). Hay que hacer un trámite con el Área de Sistemas para registrar la aplicación y tener un ambiente de pruebas. Y para desarrollar necesitamos un proveedor de identidad simulado.
 
 **Riesgos:** que la Universidad no tenga ningún protocolo estándar. Lo confirmamos la primera semana (S-09). Si solo hay LDAP, usaríamos la opción 1 con un ADR nuevo que deje escrito el riesgo de seguridad que se acepta.
+
+**Vistas que modifica:** [Contexto](../contexto.md), [Procesos](../vistas/02-procesos.md), [Desarrollo](../vistas/03-desarrollo.md), [Física](../vistas/04-fisica.md).

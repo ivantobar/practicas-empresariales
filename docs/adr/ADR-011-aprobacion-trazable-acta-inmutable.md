@@ -31,3 +31,5 @@ Elegimos la opción 2 porque cumple S-06, RN-02 y OB-06 sin violar RN-05 ni sali
 **Negativas:** legalmente vale menos que una firma certificada, y si alguien externo la exige, esta acta no le sirve. Para corregir un error toca emitir un acta nueva en vez de editarla, que es más trámite aunque deja la historia. Y el almacenamiento solo crece hasta que la tabla de retención deje borrar.
 
 **Riesgos:** R-03, que el área jurídica no acepte S-06 y pida firma certificada. Lo validamos antes de construir CU-10; si la piden, se hace un ADR nuevo que reemplace este con la opción 3 y se renegocia RN-05 con la Decanatura.
+
+**Vistas que modifica:** [Lógica](../vistas/01-logica.md), [Procesos](../vistas/02-procesos.md), [Física](../vistas/04-fisica.md). Se ve en ESC-04 ([cu10-aprobar-acta](../diagramas/secuencias/cu10-aprobar-acta.puml)).

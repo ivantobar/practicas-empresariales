@@ -31,3 +31,5 @@ Elegimos la opción 2. En la bitácora se registran: inicios de sesión, uso de 
 **Negativas:** cada operación registrada hace una escritura más (unos milisegundos), que aceptamos por la trazabilidad. La tabla crece hasta que la retención deje depurarla, y los respaldos se vuelven más pesados. Además, registrar quién consultó qué también es un dato personal, así que hay que protegerlo con los mismos permisos.
 
 **Riesgos:** que un administrador de base de datos con permisos altos modifique la bitácora. Lo aceptamos como riesgo residual; con los respaldos del Área de Sistemas se pueden detectar diferencias.
+
+**Vistas que modifica:** [Lógica](../vistas/01-logica.md), [Procesos](../vistas/02-procesos.md), [Desarrollo](../vistas/03-desarrollo.md). Se ve en ESC-02 ([cu07-evaluar-practicante](../diagramas/secuencias/cu07-evaluar-practicante.puml)).

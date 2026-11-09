@@ -27,3 +27,5 @@ Elegimos la opción 2: imagen de contenedor con Docker Compose en una máquina v
 **Negativas:** el Área de Sistemas tiene que aprender a operar contenedores si no lo hace hoy. Hay una sola instancia en una sola máquina, entonces si se cae el servidor el sistema queda fuera hasta que se recupere; lo aceptamos porque ningún driver pide alta disponibilidad. Cada actualización implica un corte corto, que se hace fuera de horas pico.
 
 **Riesgos:** que el Área de Sistemas no tenga experiencia con contenedores. Lo confirmamos la primera semana (S-09); si no la tienen, se hace un manual de operación, y si ni así funciona, se instala directo en la máquina virtual con un ADR nuevo.
+
+**Vistas que modifica:** [Física](../vistas/04-fisica.md).

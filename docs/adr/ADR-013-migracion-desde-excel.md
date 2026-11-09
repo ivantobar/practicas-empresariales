@@ -27,3 +27,5 @@ Elegimos la opción 3. La plantilla solo pide lo que no está en el SIA: el estu
 **Negativas:** cada docente tiene que gastar tiempo pasando sus datos a la plantilla justo en el lanzamiento, lo que va en contra de OB-03 durante unas semanas. No se migra la historia anterior a la fecha de corte (las horas semana a semana, los correos), solo el acumulado; eso es coherente con el alcance, que deja por fuera el histórico. Y es código de un solo uso que igual hay que hacer y probar.
 
 **Riesgos:** que algunos docentes no entreguen la plantilla a tiempo. El director pone una fecha de corte, y lo que llegue tarde se carga en una segunda tanda con el mismo importador.
+
+**Vistas que modifica:** [Contexto](../contexto.md), [Desarrollo](../vistas/03-desarrollo.md).

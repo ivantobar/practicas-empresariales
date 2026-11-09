@@ -27,3 +27,5 @@ Elegimos la opción 1. Solo se accede a la base desde los adaptadores de persist
 **Negativas:** cada cambio de modelo necesita una migración probada. Quedamos atados a las versiones que maneje el Área de Sistemas. Y al tener datos, bitácora y cola en la misma base, si la base falla se cae todo; eso se cubre con los respaldos del Área de Sistemas.
 
 **Riesgos:** que el catálogo no tenga ningún motor relacional libre. Se confirma la primera semana (S-09) y, si pasa, se escala a la Decanatura el choque entre RT-04 y RN-05.
+
+**Vistas que modifica:** [Procesos](../vistas/02-procesos.md), [Desarrollo](../vistas/03-desarrollo.md), [Física](../vistas/04-fisica.md).

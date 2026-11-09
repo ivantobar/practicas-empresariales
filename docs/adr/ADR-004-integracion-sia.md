@@ -31,3 +31,5 @@ La opción 3 la dejamos como plan B para R-02: si resulta que el SIA no tiene se
 **Negativas:** el estudiante primero ve "recibida" y después le llega el resultado, y eso hay que explicarlo bien en la pantalla. El director no puede aprobar una postulación ([CU-02](../drivers.md#1-casos-de-uso-y-casos-de-uso-primarios)) mientras siga pendiente. Hay un componente más que probar, y para eso hace falta un simulador del SIA.
 
 **Riesgos:** que el SIA esté caído varios días al inicio del periodo y se acumulen pendientes. Ponemos una alerta al administrador cuando haya postulaciones pendientes con más de 2 horas.
+
+**Vistas que modifica:** [Contexto](../contexto.md), [Lógica](../vistas/01-logica.md), [Procesos](../vistas/02-procesos.md), [Desarrollo](../vistas/03-desarrollo.md). Se ve en ESC-01 ([cu01-postularse](../diagramas/secuencias/cu01-postularse.puml)).

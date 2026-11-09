@@ -27,3 +27,5 @@ Elegimos la opción 3. Las dos formas de entrar terminan en lo mismo: una sesió
 **Negativas:** hay que hacer una tabla de permisos y una pantalla para administrar roles. Todas las consultas tienen que filtrar por ámbito, lo que agrega condiciones (aunque con la carga de S-03 no se nota). Y si alguien deja de ser director, hay que quitarle el rol a mano.
 
 **Riesgos:** que alguien cree un caso de uso nuevo y se le olvide validar permisos. Ponemos una prueba automática que falle si un caso de uso no declara qué permiso necesita.
+
+**Vistas que modifica:** [Lógica](../vistas/01-logica.md), [Desarrollo](../vistas/03-desarrollo.md). Se ve en ESC-03 ([cu09-generar-acta](../diagramas/secuencias/cu09-generar-acta.puml)) y ESC-04 ([cu10-aprobar-acta](../diagramas/secuencias/cu10-aprobar-acta.puml)).

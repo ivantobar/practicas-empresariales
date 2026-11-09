@@ -27,3 +27,5 @@ Elegimos la opción 3. Toda llamada externa que pueda fallar (verificar en el SI
 **Negativas:** es código propio que hay que mantener, cosas que un bróker ya trae hechas. Puede haber hasta un minuto de retraso entre que el SIA vuelve y el siguiente intento. La tabla crece y hay que limpiarla cada cierto tiempo.
 
 **Riesgos:** que un trabajo falle siempre (por datos malos) y se quede reintentando para siempre. Después de 24 horas pasa a "fallido" y se avisa al administrador. Si el volumen creciera mucho más que S-03, se cambiaría por un bróker con un ADR nuevo.
+
+**Vistas que modifica:** [Procesos](../vistas/02-procesos.md), [Desarrollo](../vistas/03-desarrollo.md), [Física](../vistas/04-fisica.md). Se ve en ESC-01 ([cu01-postularse](../diagramas/secuencias/cu01-postularse.puml)).
