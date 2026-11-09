@@ -1,0 +1,47 @@
+@startuml cu12-configurar-reglas
+' ESC-05: CU-12 Configurar las reglas de práctica de un programa, con EAC-01
+' Decisión que se debe ver: ADR-009 (reglas versionadas por programa)
+title ESC-05: CU-12 Configurar las reglas de un programa (EAC-01, OB-05, ADR-009)
+autonumber
+
+actor "Director de programa" as dir
+actor "Estudiante" as est
+participant "Aplicación de prácticas" as app
+database "Base de datos de prácticas" as bd
+
+dir -> app : crea una nueva versión de reglas: horas mínimas,\nrequisitos y fecha de vigencia (HTTPS)
+activate app
+app -> bd : verifica que dirige ese programa (SQL)
+
+break no es director de ese programa
+  app --> dir : 403
+end
+
+app -> app : valida los parámetros con los validadores\nque ya existen en el Módulo Reglas
+
+break un valor no es válido o el requisito no tiene validador
+  app --> dir : 422 "requisito no soportado"
+  note right of dir : Un tipo de requisito nuevo es trabajo de desarrollo:\nun validador más en el Módulo Reglas y su\nconfiguración, máximo 2 módulos y 16 h (EAC-01)
+end
+
+app --> dir : resumen de cambios, pide confirmación
+dir -> app : confirma (HTTPS)
+app -> bd : inserta VersionReglas nueva con su fecha de vigencia\n+ evento de bitácora (SQL)
+note right of bd : No se modifica la versión anterior:\nlas prácticas en curso siguen con la suya.\n0 prácticas de otros programas cambian (EAC-01)
+app --> dir : "versión guardada, vigente desde la fecha indicada"
+deactivate app
+
+== Después, cuando un estudiante se postula (CU-01) ==
+
+est -> app : envía la postulación (HTTPS)
+activate app
+app -> bd : busca la VersionReglas del programa (SQL)
+alt la fecha de la postulación es igual o posterior a la vigencia
+  bd --> app : versión nueva
+else antes de la vigencia
+  bd --> app : versión anterior
+end
+app -> bd : la Postulacion queda amarrada a esa versión (SQL)
+app --> est : 202 recibida
+deactivate app
+@enduml

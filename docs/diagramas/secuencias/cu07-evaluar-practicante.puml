@@ -1,0 +1,43 @@
+@startuml cu07-evaluar-practicante
+' ESC-02: CU-07 Evaluar el desempeño del practicante, con EAC-03 (enlace usado, vencido o alterado)
+' Decisiones que se deben ver: ADR-007 (enlace de un solo uso), ADR-008 (ámbito) y ADR-012 (bitácora)
+title ESC-02: CU-07 Evaluar al practicante (EAC-03, ADR-007, ADR-008, ADR-012)
+autonumber
+
+actor "Supervisor de empresa" as sup
+participant "Aplicación de prácticas" as app
+database "Base de datos de prácticas" as bd
+participant "Procesador de pendientes" as proc
+participant "Servicio de correo institucional" as correo
+
+== Envío del enlace (la práctica completó sus horas) ==
+
+app -> bd : crea EnlaceSupervisor (guarda solo la versión cifrada del código,\nvence en 15 días) + trabajo "enviar enlace" (SQL)
+proc -> bd : toma el trabajo "enviar enlace" (SQL)
+proc -> correo : envía el enlace al supervisor con copia al docente asesor (SMTP)
+correo --> sup : correo con el enlace
+
+== Uso del enlace ==
+
+sup -> app : abre el enlace de evaluación (HTTPS)
+activate app
+app -> app : calcula la versión cifrada del código recibido
+app -> bd : busca el EnlaceSupervisor (SQL)
+bd --> app : enlace o "no existe"
+
+alt existe, no se ha usado y tiene menos de 15 días
+  app --> sup : formulario de evaluación\n(solo datos de la práctica del enlace)
+  sup -> app : envía la nota y las observaciones (HTTPS)
+  app -> bd : guarda Evaluacion + marca el enlace "usado"\n+ evento de bitácora (una sola transacción) (SQL)
+  app --> sup : "evaluación recibida, gracias"
+else ya usado, con más de 15 días o alterado
+  app -> bd : evento de bitácora: fecha, hora y dirección de origen\n+ trabajo "avisar al docente asesor" (SQL)
+  app --> sup : "este enlace no es válido o ya venció;\npídale uno nuevo al docente asesor"
+  note right of sup : 0 datos del practicante en la respuesta.\nRegistro en la bitácora en la misma\npetición: menos de 1 minuto (EAC-03)
+end
+deactivate app
+
+opt hay un trabajo "avisar al docente asesor"
+  proc -> correo : avisa al docente asesor del intento (SMTP)
+end
+@enduml

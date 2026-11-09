@@ -1,0 +1,52 @@
+@startuml cu10-aprobar-acta
+' ESC-04: CU-10 Aprobar el acta electrónicamente
+' Decisiones que se deben ver: ADR-011 (aprobación trazable, acta inmutable), ADR-008 y ADR-012
+title ESC-04: CU-10 Aprobar el acta (RN-02, OB-06, ADR-011)
+autonumber
+
+actor "Docente asesor o Director de programa" as apr
+participant "Aplicación de prácticas" as app
+database "Base de datos de prácticas" as bd
+database "Almacenamiento de documentos" as docs
+participant "Procesador de pendientes" as proc
+participant "Servicio de correo institucional" as correo
+
+apr -> app : aprueba el acta (HTTPS, sesión institucional)
+activate app
+app -> bd : verifica rol y ámbito (asesor de la práctica\no director del programa) (SQL)
+
+break no tiene permiso o ya aprobó
+  app -> bd : evento de bitácora "permiso negado" (SQL)
+  app --> apr : 403
+end
+
+app -> docs : lee el PDF del acta (archivo)
+app -> app : calcula la huella del PDF
+
+break la huella no coincide con la guardada al generar
+  app -> bd : evento de bitácora "acta alterada" (SQL)
+  app --> apr : 409 "el acta cambió, hay que generarla de nuevo"
+end
+
+app -> bd : AprobacionActa: quién, fecha y hora, origen y huella\n+ evento de bitácora (una sola transacción) (SQL)
+
+alt es la primera aprobación
+  app -> bd : Acta "aprobada por el docente" + trabajo "avisar al director" (SQL)
+  app --> apr : "aprobada, falta el director"
+else es la segunda aprobación
+  app -> bd : Acta "cerrada": desde aquí solo lectura (SQL)
+  app -> docs : marca el PDF de solo lectura con la política\nde la tabla de retención (archivo)
+  app -> bd : trabajo "avisar al estudiante" (SQL)
+  app --> apr : "acta cerrada"
+end
+deactivate app
+
+proc -> bd : toma los avisos pendientes (SQL)
+proc -> correo : envía el aviso que corresponda (SMTP)
+
+note over app, bd
+  Si después aparece un error, el acta cerrada no se edita:
+  se genera una nueva que la reemplaza y se guardan las dos (RN-02).
+  Quién aprobó qué y cuándo se saca con una consulta (OB-06).
+end note
+@enduml

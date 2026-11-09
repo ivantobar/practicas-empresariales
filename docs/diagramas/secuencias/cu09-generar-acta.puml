@@ -1,0 +1,51 @@
+@startuml cu09-generar-acta
+' ESC-03: CU-09 Generar el acta final
+' Decisiones que se deben ver: ADR-010 (plantilla separada del código) y ADR-004/005 si el SIA falla
+title ESC-03: CU-09 Generar el acta final (RN-03, OB-04, ADR-010)
+autonumber
+
+actor "Docente asesor" as doc
+participant "Aplicación de prácticas" as app
+database "Base de datos de prácticas" as bd
+participant "SIA" as sia
+database "Almacenamiento de documentos" as docs
+
+doc -> app : solicita generar el acta de la práctica (HTTPS)
+activate app
+app -> bd : verifica rol y ámbito: es el asesor de esa práctica (SQL)
+
+break no es el docente asesor de la práctica
+  app -> bd : evento de bitácora "permiso negado" (SQL)
+  app --> doc : 403 "no tiene permiso sobre esta práctica"
+end
+
+par datos internos
+  app -> bd : horas validadas, Evaluacion y datos de la práctica (SQL)
+  bd --> app : datos
+else datos académicos
+  app -> sia : consulta datos académicos [máx. 5 s] (HTTPS)
+  sia --> app : datos académicos
+end
+
+break el SIA no responde en 5 s
+  app -> bd : trabajo pendiente "generar acta" (SQL)
+  app --> doc : 202 "el acta se generará cuando el SIA responda; te avisamos"
+end
+
+break falta algún dato que pide el reglamento
+  app --> doc : 422 lista de datos faltantes (no se genera el acta)
+end
+
+app -> docs : lee la PlantillaActa vigente (archivo)
+docs --> app : plantilla HTML con marcadores
+app -> app : llena la plantilla y la convierte a PDF\n(librería libre, RN-05)
+app -> docs : guarda el PDF (archivo)
+app -> bd : Acta "generada" con versión de plantilla y huella del PDF\n+ evento de bitácora (SQL)
+app --> doc : 201 acta generada, lista para aprobar
+deactivate app
+
+note over app, docs
+  Nadie digita datos: todo sale del sistema y del SIA (OB-04).
+  Si el Consejo cambia el formato, solo cambia la plantilla (RN-03).
+end note
+@enduml

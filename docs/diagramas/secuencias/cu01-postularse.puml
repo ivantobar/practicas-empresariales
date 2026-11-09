@@ -1,0 +1,62 @@
+@startuml cu01-postularse
+' ESC-01: CU-01 Postularse a la práctica, con EAC-02 (el SIA no responde)
+' Decisiones que se deben ver: ADR-004 (verificación diferida) y ADR-005 (cola de pendientes)
+title ESC-01: CU-01 Postularse a la práctica (EAC-02, ADR-004, ADR-005)
+autonumber
+
+actor "Estudiante" as est
+participant "Aplicación de prácticas" as app
+database "Base de datos de prácticas" as bd
+participant "Procesador de pendientes" as proc
+participant "SIA" as sia
+participant "Servicio de correo institucional" as correo
+
+note over est, app : El estudiante ya inició sesión con su cuenta institucional (ADR-006)
+
+est -> app : envía la postulación (HTTPS)
+activate app
+app -> bd : consulta postulaciones activas del estudiante (SQL)
+bd --> app : resultado
+
+break ya tiene una postulación activa
+  app --> est : 409 "ya tienes una postulación en curso"
+end
+
+app -> bd : guarda Postulacion "pendiente de verificación"\ncon la VersionReglas vigente del programa\n+ trabajo pendiente "verificar en SIA"\n+ evento de bitácora (una sola transacción) (SQL)
+bd --> app : confirmada
+app --> est : 202 "postulación recibida, te avisamos el resultado"
+deactivate app
+note right of est : Respuesta sin esperar al SIA:\nmenos de 3 s en el 95% de los casos (EAC-02)
+
+== En segundo plano (cada minuto) ==
+
+loop cada minuto, mientras haya trabajos vencidos y la postulación tenga menos de 24 h pendiente
+  proc -> bd : toma los trabajos "verificar en SIA" vencidos (SQL)
+  activate proc
+  proc -> sia : consulta requisitos académicos [máx. 5 s] (HTTPS)
+  alt el SIA responde en 5 s
+    sia --> proc : datos académicos
+    proc -> proc : aplica los validadores de la VersionReglas\nde la postulación (Módulo Reglas)
+    proc -> bd : Postulacion "verificada" o "no cumple requisitos"\n+ trabajo "avisar al estudiante" + bitácora (SQL)
+  else no responde en 5 s o responde con error
+    proc -> bd : reprograma el trabajo con espera creciente\n(1, 2, 4, 8 min, máximo 15 min) (SQL)
+  end
+  deactivate proc
+end
+
+opt la postulación quedó verificada o no cumple
+  proc -> correo : envía el resultado al estudiante (SMTP)
+end
+
+opt el trabajo cumple 24 h sin poder verificarse
+  proc -> bd : marca el trabajo "fallido" (SQL)
+  proc -> correo : avisa al administrador del sistema (SMTP)
+end
+
+note over proc, sia
+  Con espera máxima de 15 min entre intentos, cuando el SIA vuelve
+  la verificación se hace en el siguiente intento: dentro de los
+  30 min que pide EAC-02. Ninguna postulación se pierde porque
+  se guardó antes de llamar al SIA.
+end note
+@enduml

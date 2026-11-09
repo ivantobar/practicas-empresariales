@@ -122,3 +122,43 @@ RT-04, RN-02, RN-05
 ### Baja importancia, alta dificultad: cuestionar (¿de verdad se necesita?)
 
 PA-05
+
+## 6. Escenarios (+1)
+
+Estos son los escenarios que recorren las vistas. Hicimos uno por cada caso de uso primario (5) y revisamos si quedaba algún EAC sin cubrir: no quedó ninguno, así que no hace falta un escenario adicional. Cada uno tiene su diagrama de secuencia arquitectónico en [diagramas/secuencias/](diagramas/secuencias/), con participantes que son contenedores de la [vista de procesos](vistas/02-procesos.md) y con los mismos nombres.
+
+| ID | Escenario | Origen | Por qué es escenario | Archivo en secuencias/ |
+|---|---|---|---|---|
+| **ESC-01** | Postularse a la práctica | CU-01 | Caso de uso primario por complejidad técnica (integración con el SIA). Cubre EAC-02: se ve qué pasa cuando el SIA no responde | [cu01-postularse.puml](diagramas/secuencias/cu01-postularse.puml) |
+| **ESC-02** | Evaluar al practicante | CU-07 | Caso de uso primario por riesgo (usuario externo sin cuenta). Cubre EAC-03: enlace usado, vencido o alterado | [cu07-evaluar-practicante.puml](diagramas/secuencias/cu07-evaluar-practicante.puml) |
+| **ESC-03** | Generar el acta final | CU-09 | Caso de uso primario por importancia para el negocio. Muestra la plantilla separada del código (RN-03) y qué pasa si el SIA no responde o faltan datos | [cu09-generar-acta.puml](diagramas/secuencias/cu09-generar-acta.puml) |
+| **ESC-04** | Aprobar el acta | CU-10 | Caso de uso primario atado a seguridad (trazabilidad). Muestra las dos aprobaciones y el acta que queda de solo lectura (RN-02) | [cu10-aprobar-acta.puml](diagramas/secuencias/cu10-aprobar-acta.puml) |
+| **ESC-05** | Configurar las reglas de un programa | CU-12 | Caso de uso primario atado a mantenibilidad. Cubre EAC-01: la versión nueva no afecta las prácticas en curso | [cu12-configurar-reglas.puml](diagramas/secuencias/cu12-configurar-reglas.puml) |
+
+Verificación: los 5 casos primarios tienen su escenario, EAC-01 está en ESC-05, EAC-02 en ESC-01 y EAC-03 en ESC-02. Ningún escenario está sin un driver detrás.
+
+Un detalle de EAC-01: la parte de "16 horas y máximo 2 módulos" es de tiempo de desarrollo y no se ve en una secuencia, se ve en la [vista de desarrollo](vistas/03-desarrollo.md). Lo que sí muestra ESC-05 es la otra mitad: 0 prácticas en curso cambian de reglas.
+
+### Fragmentos usados
+
+| Escenario | Fragmentos y guardas |
+|---|---|
+| ESC-01 | break [ya tiene una postulación activa], loop [cada minuto, mientras haya trabajos vencidos y menos de 24 h], alt [el SIA responde en 5 s] / [no responde en 5 s o responde con error], opt [quedó verificada o no cumple], opt [24 h sin poder verificarse] |
+| ESC-02 | alt [existe, no se ha usado y tiene menos de 15 días] / [ya usado, con más de 15 días o alterado], opt [hay aviso para el docente] |
+| ESC-03 | break [no es el docente asesor], par [datos internos] [datos académicos], break [el SIA no responde en 5 s], break [falta algún dato del reglamento] |
+| ESC-04 | break [no tiene permiso o ya aprobó], break [la huella no coincide], alt [primera aprobación] / [segunda aprobación] |
+| ESC-05 | break [no es director del programa], break [valor no válido o requisito sin validador], alt [postulación desde la vigencia] / [antes de la vigencia] |
+
+### Recorrido de validación
+
+Qué elementos de cada vista toca cada escenario. Si un escenario no se pudiera recorrer, se corrige la vista, no se inventa otra.
+
+| Escenario | Contexto | Lógica | Procesos | Desarrollo | Física |
+|---|---|---|---|---|---|
+| ESC-01 | Estudiante, SIA, Proveedor de identidad, correo | Estudiante, Postulacion, VersionReglas, Requisito, EventoBitacora | Aplicación, Base de datos, Procesador de pendientes | Controladores web, Módulo Postulación, Módulo Reglas, Módulo Pendientes, Adaptador SIA, Adaptador de correo | Proxy, máquina virtual, servidor de base de datos, servidores del SIA |
+| ESC-02 | Supervisor de empresa, correo | Practica, EnlaceSupervisor, SupervisorEmpresa, Evaluacion, EventoBitacora | Aplicación, Base de datos, Procesador de pendientes | Controladores web, Módulo Acceso, Módulo Evaluación, Módulo Bitácora, Módulo Pendientes | Dispositivo del usuario por internet, proxy, máquina virtual, servidor de correo |
+| ESC-03 | Docente asesor, SIA | Practica, RegistroHoras, Evaluacion, Acta, PlantillaActa | Aplicación, Base de datos, Almacenamiento de documentos | Módulo Actas, Módulo Horas, Módulo Evaluación, Adaptador SIA, Adaptador de documentos | Máquina virtual (volumen), servidor de base de datos, servidores del SIA |
+| ESC-04 | Docente asesor, Director de programa, correo | Acta, AprobacionActa, DocenteAsesor, DirectorPrograma, EventoBitacora | Aplicación, Base de datos, Almacenamiento de documentos, Procesador de pendientes | Módulo Acceso, Módulo Actas, Módulo Bitácora, Adaptador de documentos | Máquina virtual (volumen), servidor de base de datos, servidor de correo |
+| ESC-05 | Director de programa, Estudiante | Programa, VersionReglas, Requisito, Postulacion | Aplicación, Base de datos | Módulo Acceso, Módulo Reglas, Módulo Postulación, Módulo Bitácora | Máquina virtual, servidor de base de datos |
+
+Las 4 vistas y el contexto quedan recorridos por al menos un escenario.
