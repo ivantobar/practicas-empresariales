@@ -1,0 +1,51 @@
+@startuml 04-fisica
+' Vista física: despliegue (C4 deployment)
+' Todo corre en el centro de datos de la Universidad (RT-01)
+!include <C4/C4_Deployment>
+
+title Vista física: despliegue del Sistema de Gestión de Prácticas Empresariales
+
+Deployment_Node(cliente, "Dispositivo del usuario", "Celular o computador") {
+  Container(navegador, "Navegador web", "Cualquier navegador actual", "Usado por estudiantes, docentes, directores, supervisores y administrador")
+}
+
+Deployment_Node(dc, "Centro de datos de la Universidad", "Infraestructura administrada por el Área de Sistemas (RT-01)") {
+
+  Deployment_Node(proxy, "Proxy institucional", "Servidor del Área de Sistemas") {
+    Container(terminacion, "Terminación HTTPS", "Proxy inverso", "Certificado institucional; no deja pasar HTTP plano (RN-01)")
+  }
+
+  Deployment_Node(vm, "Máquina virtual de prácticas", "Linux, Docker y Docker Compose (ADR-002)") {
+    Container(app, "Aplicación de prácticas", "Contenedor Docker, imagen con versión", "Monolito modular (ADR-001)")
+    Container(procesador, "Procesador de pendientes", "Contenedor Docker, misma imagen", "Tarea programada cada minuto (ADR-005)")
+    ContainerDb(docs, "Almacenamiento de documentos", "Volumen persistente con respaldo", "Plantillas y PDF de actas (ADR-010, ADR-011)")
+  }
+
+  Deployment_Node(srvbd, "Servidor de base de datos institucional", "Motor relacional libre del catálogo (RT-04, ADR-003)") {
+    ContainerDb(bd, "Base de datos de prácticas", "Esquema propio", "Solo accesible desde la red interna")
+  }
+
+  Deployment_Node(srvsia, "Servidores del SIA", "Administrados por el administrador del SIA") {
+    System_Ext(sia, "SIA", "Expone servicios de consulta (RT-03)")
+  }
+  Deployment_Node(srvidp, "Servidor de identidad", "Área de Sistemas") {
+    System_Ext(idp, "Proveedor de identidad institucional", "Inicio de sesión único (RT-02)")
+  }
+  Deployment_Node(srvcorreo, "Servidor de correo", "Área de Sistemas") {
+    System_Ext(correo, "Servicio de correo institucional", "Dominio institucional")
+  }
+}
+
+Rel(navegador, terminacion, "Peticiones", "HTTPS 443, internet")
+Rel(terminacion, app, "Reenvía", "HTTP, red interna")
+Rel(navegador, idp, "Inicia sesión", "HTTPS")
+Rel(app, bd, "Consultas", "SQL, red interna")
+Rel(procesador, bd, "Toma trabajos", "SQL, red interna")
+Rel(app, docs, "Lee y escribe", "Volumen local")
+Rel(app, sia, "Consulta", "HTTPS, red interna")
+Rel(procesador, sia, "Verifica", "HTTPS, red interna")
+Rel(app, idp, "Valida la respuesta firmada", "HTTPS, red interna")
+Rel(procesador, correo, "Envía", "SMTP, red interna")
+
+SHOW_LEGEND()
+@enduml

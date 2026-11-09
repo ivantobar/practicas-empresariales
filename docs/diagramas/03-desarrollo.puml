@@ -1,0 +1,82 @@
+@startuml 03-desarrollo
+' Vista de desarrollo: componentes de la Aplicación de prácticas (C4 nivel 3)
+' Capas de Clean Architecture: infraestructura -> aplicacion -> dominio
+' Las dependencias solo apuntan hacia adentro y entre módulos no hay ciclos
+!include <C4/C4_Component>
+
+title Vista de desarrollo: componentes de la Aplicación de prácticas
+
+Person(usuarios, "Usuarios", "Estudiante, docente asesor, director, supervisor y administrador")
+Container(procesador, "Procesador de pendientes", "Misma imagen, otro punto de entrada")
+
+Container_Boundary(app, "Aplicación de prácticas") {
+
+  Boundary(infra_in, "infraestructura (entrada)") {
+    Component(ctrl, "Controladores web", "Adaptador de entrada", "Reciben las peticiones HTTPS y llaman a los casos de uso")
+  }
+
+  Boundary(aplicacion, "aplicacion (casos de uso y puertos)") {
+    Component(postulacion, "Módulo Postulación", "Casos de uso", "CU-01, CU-02, CU-03")
+    Component(horas, "Módulo Horas", "Casos de uso", "CU-04, CU-05, CU-06")
+    Component(evaluacion, "Módulo Evaluación", "Casos de uso", "CU-07, CU-08")
+    Component(actas, "Módulo Actas", "Casos de uso", "CU-09, CU-10, CU-11, CU-13, CU-14")
+    Component(reglas, "Módulo Reglas", "Casos de uso y validadores", "CU-12. Versiones por programa (ADR-009)")
+    Component(administracion, "Módulo Administración", "Casos de uso", "Roles e importador de Excel (CU-15, ADR-013)")
+    Component(acceso, "Módulo Acceso", "Transversal", "Sesión, roles con ámbito y enlaces de un solo uso (ADR-006, 007, 008)")
+    Component(pendientes, "Módulo Pendientes", "Transversal", "Cola de trabajos y reintentos (ADR-005)")
+    Component(bitacora, "Módulo Bitácora", "Transversal", "Eventos de auditoría (ADR-012)")
+  }
+
+  Boundary(dominio, "dominio") {
+    Component(entidades, "Entidades del dominio", "Clases sin dependencias", "Las de la vista lógica: Practica, VersionReglas, Acta...")
+  }
+
+  Boundary(infra_out, "infraestructura (salida)") {
+    Component(ad_sia, "Adaptador SIA", "Implementa ConsultaAcademica")
+    Component(ad_idp, "Adaptador de identidad", "Implementa ProveedorIdentidad")
+    Component(ad_correo, "Adaptador de correo", "Implementa Notificador")
+    Component(ad_bd, "Adaptador de base de datos", "Implementa los repositorios, la cola y la bitácora")
+    Component(ad_docs, "Adaptador de documentos", "Implementa AlmacenDocumentos. Plantilla HTML a PDF con librería libre")
+  }
+}
+
+System_Ext(sia, "SIA")
+System_Ext(idp, "Proveedor de identidad institucional")
+System_Ext(correo, "Servicio de correo institucional")
+ContainerDb(bd, "Base de datos de prácticas")
+ContainerDb(docs, "Almacenamiento de documentos")
+
+Rel(usuarios, ctrl, "Usan", "HTTPS")
+Rel(ctrl, acceso, "Valida sesión o enlace")
+Rel(ctrl, postulacion, "Invoca")
+Rel(ctrl, horas, "Invoca")
+Rel(ctrl, evaluacion, "Invoca")
+Rel(ctrl, actas, "Invoca")
+Rel(ctrl, reglas, "Invoca")
+Rel(ctrl, administracion, "Invoca")
+
+Rel(postulacion, reglas, "Usa la versión vigente y sus validadores")
+Rel(actas, horas, "Usa las horas validadas")
+Rel(actas, evaluacion, "Usa la nota de la empresa")
+Rel(administracion, postulacion, "Crea prácticas migradas")
+Rel(administracion, reglas, "Asigna versión de reglas")
+
+Rel(procesador, pendientes, "Ejecuta los trabajos vencidos")
+
+Rel(ad_sia, sia, "Consulta", "HTTPS")
+Rel(ad_idp, idp, "Valida identidad", "HTTPS")
+Rel(ad_correo, correo, "Envía", "SMTP")
+Rel(ad_bd, bd, "Lee y escribe", "SQL")
+Rel(ad_docs, docs, "Lee y escribe", "Archivos")
+
+note as N1
+  No se dibujan todas las flechas para que se pueda leer:
+  - Todos los módulos usan Acceso, Pendientes y Bitácora,
+    y todos usan las Entidades del dominio.
+  - Cada módulo usa sus puertos; los adaptadores los implementan.
+  - Ningún módulo transversal usa a uno de negocio.
+  El detalle de quién usa a quién está en 03-desarrollo.md.
+end note
+
+SHOW_LEGEND()
+@enduml
