@@ -1,0 +1,133 @@
+@startuml 01-logica
+' Vista lógica: modelo de dominio (UML)
+' Solo conceptos del negocio y atributos clave. Sin tipos, sin métodos y sin nada técnico
+hide circle
+hide methods
+skinparam classAttributeIconSize 0
+
+title Vista lógica: modelo de dominio del Sistema de Gestión de Prácticas Empresariales
+
+class Programa {
+  nombre
+}
+class VersionReglas {
+  número
+  fecha de vigencia
+  horas mínimas
+  plazos
+}
+class Requisito {
+  tipo
+  valor exigido
+}
+class Estudiante {
+  documento
+  nombre
+}
+class Postulacion {
+  fecha
+  estado
+}
+class Practica {
+  fecha de inicio
+  estado
+  horas acumuladas
+}
+class Empresa {
+  nombre
+  convenio vigente
+}
+class SupervisorEmpresa {
+  nombre
+  correo
+}
+class DocenteAsesor {
+  nombre
+  carga actual
+}
+class DirectorPrograma {
+  nombre
+}
+class RegistroHoras {
+  semana
+  horas
+  estado
+}
+class EnlaceSupervisor {
+  propósito
+  fecha de vencimiento
+  estado
+}
+class Evaluacion {
+  fecha
+  nota
+  observaciones
+}
+class Acta {
+  número
+  estado
+  huella del PDF
+}
+class PlantillaActa {
+  versión
+  vigente desde
+}
+class AprobacionActa {
+  fecha y hora
+  origen
+  huella aprobada
+}
+class EventoBitacora {
+  quién
+  qué
+  sobre qué
+  cuándo
+  desde dónde
+}
+
+Programa "1" -- "1..*" VersionReglas : tiene >
+VersionReglas "1" *-- "1..*" Requisito : exige >
+Programa "1" -- "0..*" Estudiante : pertenece <
+DirectorPrograma "1" -- "1" Programa : dirige >
+Estudiante "1" -- "0..*" Postulacion : hace >
+Postulacion "0..*" -- "1" VersionReglas : se evalúa con >
+Postulacion "1" -- "0..1" Practica : da origen a >
+Practica "0..*" -- "1" Empresa : se hace en >
+Practica "0..*" -- "1" SupervisorEmpresa : la supervisa <
+SupervisorEmpresa "0..*" -- "1" Empresa : trabaja en >
+Practica "0..*" -- "1" DocenteAsesor : la asesora <
+Practica "1" *-- "0..*" RegistroHoras : acumula >
+Practica "1" -- "0..1" Evaluacion : recibe >
+Practica "1" -- "0..*" EnlaceSupervisor : genera >
+EnlaceSupervisor "0..*" -- "1" SupervisorEmpresa : se envía a >
+Practica "1" -- "0..*" Acta : cierra con >
+Acta "0..*" -- "1" PlantillaActa : se genera con >
+Acta "1" *-- "0..2" AprobacionActa : tiene >
+AprobacionActa "0..*" -- "0..1" DocenteAsesor : la da <
+AprobacionActa "0..*" -- "0..1" DirectorPrograma : la da <
+Acta "0..1" -- "0..1" Acta : reemplaza >
+
+note right of Postulacion
+  Estados: pendiente de verificación,
+  verificada, no cumple requisitos,
+  aprobada, rechazada (ADR-004)
+end note
+
+note bottom of EnlaceSupervisor
+  Un solo uso y vence a los 15 días.
+  Estados: vigente, usado, vencido (ADR-007)
+end note
+
+note bottom of AprobacionActa
+  Máximo 2: docente asesor y director.
+  Con las 2 el acta queda cerrada y no
+  se modifica (ADR-011, RN-02)
+end note
+
+note right of EventoBitacora
+  No se relaciona con una sola entidad:
+  registra eventos de todas (ADR-012).
+  No copia datos personales.
+end note
+
+@enduml

@@ -1,0 +1,41 @@
+@startuml 02-procesos
+' Vista de procesos: diagrama de contenedores (C4 nivel 2)
+' Contenedor = algo que corre o guarda datos por separado, no necesariamente Docker
+!include <C4/C4_Container>
+
+title Vista de procesos: contenedores del Sistema de Gestión de Prácticas Empresariales
+
+Person(estudiante, "Estudiante", "Desde el celular o el computador")
+Person(docente, "Docente asesor")
+Person(director, "Director de programa")
+Person_Ext(supervisor, "Supervisor de empresa", "Sin cuenta (RN-04)")
+Person(admin, "Administrador del sistema")
+
+System_Boundary(sistema, "Sistema de Gestión de Prácticas Empresariales") {
+  Container(app, "Aplicación de prácticas", "Monolito modular (ADR-001)", "Páginas web y todos los casos de uso. Responde al usuario sin esperar al SIA ni al correo")
+  Container(procesador, "Procesador de pendientes", "Tarea programada cada minuto, misma imagen (ADR-005)", "Verifica en el SIA, envía correos y reintenta con espera creciente")
+  ContainerDb(bd, "Base de datos de prácticas", "Relacional libre del catálogo (ADR-003)", "Prácticas, reglas versionadas, cola de pendientes y bitácora de solo inserción")
+  ContainerDb(docs, "Almacenamiento de documentos", "Sistema de archivos con respaldo", "Plantillas del acta versionadas y PDF de actas cerradas (ADR-010, ADR-011)")
+}
+
+System_Ext(sia, "SIA", "Servicios de consulta (RT-03)")
+System_Ext(idp, "Proveedor de identidad institucional", "Inicio de sesión único (RT-02)")
+System_Ext(correo, "Servicio de correo institucional")
+
+Rel(estudiante, app, "Se postula y registra horas", "HTTPS")
+Rel(docente, app, "Revisa y aprueba actas", "HTTPS")
+Rel(director, app, "Aprueba, configura reglas y monitorea", "HTTPS")
+Rel(supervisor, app, "Abre el enlace de un solo uso", "HTTPS")
+Rel(admin, app, "Administra roles y migra prácticas", "HTTPS")
+
+Rel(app, idp, "Delega el inicio de sesión", "HTTPS, protocolo estándar")
+Rel(app, bd, "Lee y escribe datos, registra trabajos pendientes y eventos de bitácora", "SQL")
+Rel(app, docs, "Lee plantillas y guarda actas", "Sistema de archivos")
+Rel(app, sia, "Consulta datos académicos para el acta, espera máximo 5 s", "HTTPS")
+
+Rel(procesador, bd, "Toma trabajos pendientes y guarda resultados", "SQL")
+Rel(procesador, sia, "Verifica requisitos, espera máximo 5 s", "HTTPS")
+Rel(procesador, correo, "Envía enlaces, recordatorios y avisos", "SMTP")
+
+SHOW_LEGEND()
+@enduml

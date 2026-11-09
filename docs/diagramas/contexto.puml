@@ -1,0 +1,32 @@
+@startuml contexto
+' Contexto del sistema (C4 nivel 1)
+' El sistema va como caja negra: no se muestra nada de adentro
+!include <C4/C4_Context>
+
+title Contexto del Sistema de Gestión de Prácticas Empresariales
+
+Person(estudiante, "Estudiante", "Se postula, registra sus horas cada semana y consulta su trámite")
+Person(docente, "Docente asesor", "Revisa horas y avance, genera y aprueba el acta")
+Person(director, "Director de programa", "Aprueba postulaciones, asigna docentes, configura reglas y aprueba el acta")
+Person_Ext(supervisor, "Supervisor de empresa", "Externo, sin cuenta institucional (RN-04). Valida horas y evalúa al practicante")
+Person(admin, "Administrador del sistema", "Administra roles y carga la migración desde Excel")
+
+System(sistema, "Sistema de Gestión de Prácticas Empresariales", "Gestiona la práctica desde la postulación hasta el acta final")
+
+System_Ext(sia, "SIA", "Sistema de Información Académica. Datos académicos del estudiante, solo por sus servicios (RT-03)")
+System_Ext(idp, "Proveedor de identidad institucional", "Inicio de sesión único con la cuenta institucional (RT-02)")
+System_Ext(correo, "Servicio de correo institucional", "Entrega enlaces, recordatorios y avisos")
+
+Rel(estudiante, sistema, "Se postula y registra horas", "HTTPS")
+Rel(docente, sistema, "Revisa avances y aprueba actas", "HTTPS")
+Rel(director, sistema, "Aprueba, configura reglas y monitorea", "HTTPS")
+Rel(supervisor, sistema, "Valida horas y evalúa por enlace de un solo uso", "HTTPS")
+Rel(admin, sistema, "Administra roles y migra prácticas", "HTTPS")
+
+Rel(sistema, sia, "Consulta requisitos académicos", "HTTPS, servicios del SIA")
+Rel(sistema, idp, "Delega la autenticación", "HTTPS, protocolo estándar")
+Rel(sistema, correo, "Envía correos", "SMTP")
+Rel(correo, supervisor, "Entrega el enlace de un solo uso")
+
+SHOW_LEGEND()
+@enduml
