@@ -8,23 +8,25 @@ Los drivers son el subconjunto de requisitos que, si cambiaran radicalmente, obl
 
 Criterios para que un caso de uso sea primario: **(1)** importancia para el negocio, **(2)** complejidad técnica, **(3)** alta frecuencia de uso, **(4)** riesgo, **(5)** atado a un atributo de calidad crítico.
 
-| ID | Caso de uso | Actor | ¿Primario? | Justificación |
-|---|---|---|---|---|
-| **CU-01** | Postularse a la práctica empresarial | Estudiante | **Sí** | **(2) Complejidad técnica:** verifica los requisitos académicos contra los servicios del SIA (RT-03), única integración con otro sistema |
-| **CU-02** | Aprobar o rechazar la postulación | Director de programa | No | Decisión sobre datos ya verificados en CU-01; no ejercita nada nuevo |
-| **CU-03** | Asignar el docente asesor de práctica | Director de programa | No | Registro simple con consulta de la carga de cada docente asesor |
-| **CU-04** | Registrar las horas semanales | Estudiante | No | Es el más frecuente, pero son a lo sumo 250 registros por semana (S-03): no es carga alta y es un formulario simple |
-| **CU-05** | Validar las horas registradas | Supervisor de empresa | No | Usa el mismo acceso por enlace sin cuenta que CU-07; no ejercita nada nuevo |
-| **CU-06** | Revisar horas y avance del practicante | Docente asesor | No | Consulta de datos existentes |
-| **CU-07** | Evaluar el desempeño del practicante | Supervisor de empresa | **Sí** | **(4) Riesgo:** si el supervisor no responde no hay acta (R-01, OB-02), y es un usuario externo sin cuenta institucional (RN-04) |
-| **CU-08** | Enviar recordatorios de plazos | Sistema (tarea programada) | No | Envío periódico de bajo volumen por el correo institucional; no cambia la estructura |
-| **CU-09** | Generar el acta final de la práctica | Sistema, a solicitud del docente asesor | **Sí** | **(1) Importancia para el negocio:** es la razón de ser del sistema y de ella dependen OB-01 y OB-04 |
-| **CU-10** | Aprobar el acta electrónicamente | Docente asesor y director de programa | **Sí** | **(5) Atado a un atributo crítico:** seguridad (trazabilidad de quién aprobó el acta y cuándo, OB-06, S-06) |
-| **CU-11** | Consultar el estado del trámite | Estudiante | No | Consulta simple, no ejercita nada nuevo |
-| **CU-12** | Configurar las reglas de práctica de un programa | Director de programa | **Sí** | **(5) Atado a un atributo crítico:** mantenibilidad (OB-05), porque requisitos y horas varían por programa (S-07) |
-| **CU-13** | Monitorear el estado de las prácticas | Director de programa | No | Consulta de datos que ya registraron los demás casos de uso |
-| **CU-14** | Generar el consolidado para auditoría o acreditación | Director de programa | No | Importante para el negocio (OB-06), pero es un reporte sobre datos existentes: no estructura nada |
-| **CU-15** | Migrar las prácticas en curso desde Excel | Administrador del sistema | No | Se ejecuta una sola vez, al lanzamiento |
+| ID | Caso de uso | Actor | ¿Primario? | Justificación | Se especifica en |
+|---|---|---|---|---|---|
+| **CU-01** | Postularse a la práctica empresarial | Estudiante | **Sí** | **(2) Complejidad técnica:** verifica los requisitos académicos contra los servicios del SIA (RT-03), única integración con otro sistema | [specs/001](../specs/001-postularse/spec.md) |
+| **CU-02** | Aprobar o rechazar la postulación | Director de programa | No | Decisión sobre datos ya verificados en CU-01; no ejercita nada nuevo | (sin especificar) |
+| **CU-03** | Asignar el docente asesor de práctica | Director de programa | No | Registro simple con consulta de la carga de cada docente asesor | (sin especificar) |
+| **CU-04** | Registrar las horas semanales | Estudiante | No | Es el más frecuente, pero son a lo sumo 250 registros por semana (S-03): no es carga alta y es un formulario simple | (sin especificar) |
+| **CU-05** | Validar las horas registradas | Supervisor de empresa | No | Usa el mismo acceso por enlace sin cuenta que CU-07; no ejercita nada nuevo | (sin especificar) |
+| **CU-06** | Revisar horas y avance del practicante | Docente asesor | No | Consulta de datos existentes | (sin especificar) |
+| **CU-07** | Evaluar el desempeño del practicante | Supervisor de empresa | **Sí** | **(4) Riesgo:** si el supervisor no responde no hay acta (R-01, OB-02), y es un usuario externo sin cuenta institucional (RN-04) | (sin especificar) |
+| **CU-08** | Enviar recordatorios de plazos | Sistema (tarea programada) | No | Envío periódico de bajo volumen por el correo institucional; no cambia la estructura | (sin especificar) |
+| **CU-09** | Generar el acta final de la práctica | Sistema, a solicitud del docente asesor | **Sí** | **(1) Importancia para el negocio:** es la razón de ser del sistema y de ella dependen OB-01 y OB-04 | (sin especificar) |
+| **CU-10** | Aprobar el acta electrónicamente | Docente asesor y director de programa | **Sí** | **(5) Atado a un atributo crítico:** seguridad (trazabilidad de quién aprobó el acta y cuándo, OB-06, S-06) | (sin especificar) |
+| **CU-11** | Consultar el estado del trámite | Estudiante | No | Consulta simple, no ejercita nada nuevo | (sin especificar) |
+| **CU-12** | Configurar las reglas de práctica de un programa | Director de programa | **Sí** | **(5) Atado a un atributo crítico:** mantenibilidad (OB-05), porque requisitos y horas varían por programa (S-07) | (sin especificar) |
+| **CU-13** | Monitorear el estado de las prácticas | Director de programa | No | Consulta de datos que ya registraron los demás casos de uso | (sin especificar) |
+| **CU-14** | Generar el consolidado para auditoría o acreditación | Director de programa | No | Importante para el negocio (OB-06), pero es un reporte sobre datos existentes: no estructura nada | (sin especificar) |
+| **CU-15** | Migrar las prácticas en curso desde Excel | Administrador del sistema | No | Se ejecuta una sola vez, al lanzamiento | (sin especificar) |
+
+Este catálogo es la lista de funcionalidades del sistema. Cada caso de uso se especifica en una carpeta de `specs/` con su mismo número (CU-07 → `specs/007-...`). Un caso de uso sin enlace en "Se especifica en" es una funcionalidad que nadie ha especificado. El orden sale de la [matriz de priorización](#5-matriz-de-priorización): primero CU-01 y CU-12 (atender primero), después CU-07, CU-09 y CU-10 (hacer ya) y luego los demás.
 
 ## 2. Escenarios de atributos de calidad
 
@@ -162,3 +164,4 @@ Qué elementos de cada vista toca cada escenario. Si un escenario no se pudiera 
 | ESC-05 | Director de programa, Estudiante | Programa, VersionReglas, Requisito, Postulacion | Aplicación, Base de datos | Módulo Acceso, Módulo Reglas, Módulo Postulación, Módulo Bitácora | Máquina virtual, servidor de base de datos |
 
 Las 4 vistas y el contexto quedan recorridos por al menos un escenario.
+
