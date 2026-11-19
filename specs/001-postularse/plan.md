@@ -99,13 +99,7 @@ Según [vistas/03-desarrollo.md](../../docs/vistas/03-desarrollo.md). Hay una cl
 |---|---|
 | `src/main.py` | Arma los adaptadores, los módulos y los casos de uso. Registra `VerificarPostulacion` en el `ProcesadorPendientes` para el tipo "verificar en SIA". Tiene dos puntos de entrada, la aplicación y el procesador (`ejecutar_ciclo` cada minuto), como pide ADR-002 ("misma imagen, otro punto de entrada"). |
 
-## Decisiones pendientes
 
-Ninguna. Las tres que dejó el plan se resolvieron en la revisión:
-
-- DP-01: en esta funcionalidad solo se registran los trabajos "avisar al estudiante" y "avisar al administrador"; quién los envía (Notificador) se decide en otra funcionalidad.
-- DP-02: en los eventos de bitácora que genera el procesador, quién = "procesador de pendientes" y desde dónde = "procesador de pendientes".
-- DP-03: no hay pruebas automatizadas (lámina 51 del curso). La validación se hace escenario por escenario en validacion.md, con la evidencia que da `python src/main.py`, que ejecuta los 11 escenarios con datos de ejemplo y hora simulada (`ahora`).
 
 ### Cobertura de los escenarios de spec.md
 
@@ -130,7 +124,7 @@ Se sigue [diagramas/secuencias/cu01-postularse.puml](../../docs/diagramas/secuen
 1. Petición del estudiante: `Postularse` → `ValidarPermiso` → `RepositorioPostulaciones` (¿tiene una activa?) → `ObtenerVersionVigente` → guarda `Postulacion` → `RegistrarTrabajo` ("verificar en SIA") → `RegistrarEvento` → `PostularseSalida`. El SIA no se consulta.
 2. En segundo plano: `ProcesadorPendientes.ejecutar_ciclo(ahora)` → `VerificarPostulacion` → `VerificarRequisitos` → `ConsultaAcademica` (máximo 5 s) → validadores → cambio de estado, evento de bitácora y trabajo "avisar al estudiante". Si falla, se reprograma, o queda "fallido" con el trabajo "avisar al administrador".
 
-Los dos pasos del diagrama de secuencia que envían correo (SMTP) dependen de DP-01.
+Los dos pasos del diagrama de secuencia que envían correo (SMTP) quedan fuera de esta funcionalidad (DP-01): aquí solo se registran los trabajos de aviso.
 
 ## Datos
 
@@ -152,10 +146,9 @@ Los dos pasos del diagrama de secuencia que envían correo (SMTP) dependen de DP
 
 ## Decisiones pendientes
 
-- **DP-01. ¿Quién ejecuta los trabajos de aviso ("avisar al estudiante" y "avisar al administrador")?** La spec solo pide que queden registrados (escenarios 2, 3 y 8), pero el diagrama de secuencia muestra el envío por SMTP. Según la vista de desarrollo, el puerto `Notificador` es del Módulo Pendientes, aunque dice también que "Evaluación y Actas hacen lo mismo para sus correos", es decir, cada módulo registra su propio manejador. Hay dos opciones:
-  - (a) Un manejador genérico `EnviarAviso` en Pendientes que usa `Notificador`, con un `NotificadorEnMemoria`.
-  - (b) En esta funcionalidad solo se registran los trabajos, y quién los envía se decide en otra funcionalidad.
+Ninguna. Las tres que dejó el plan se resolvieron en la revisión:
 
-  Recomendación: (b), porque cumple la spec sin crear componentes que la vista no aclara.
-- **DP-02. ¿Qué "quién" y qué "desde dónde" llevan los eventos de bitácora que genera el procesador?** Por ejemplo, el cambio a "verificada", que no tiene sesión de usuario. Ningún ADR lo dice. Propuesta: quién = "procesador de pendientes" y desde dónde = "procesador de pendientes".
-- **DP-03. ¿Dónde van las pruebas y cómo se corren?** Ni AGENTS.md ni ningún ADR lo dice. Como no hay `__init__.py`, `unittest discover` no entra en subcarpetas. Propuesta: carpeta plana `pruebas/` en la raíz, y se corren desde la raíz con `PYTHONPATH=src` y `python -m unittest discover -s pruebas`.
+- DP-01: en esta funcionalidad solo se registran los trabajos "avisar al estudiante" y "avisar al administrador"; quién los envía (Notificador) se decide en otra funcionalidad.
+- DP-02: en los eventos de bitácora que genera el procesador, quién = "procesador de pendientes" y desde dónde = "procesador de pendientes".
+- DP-03: no hay pruebas automatizadas (lámina 51 del curso). La validación se hace escenario por escenario en validacion.md, con la evidencia que da `python src/main.py`, que ejecuta los 11 escenarios con datos de ejemplo y hora simulada (`ahora`).
+
