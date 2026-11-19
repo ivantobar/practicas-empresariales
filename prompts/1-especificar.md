@@ -3,8 +3,9 @@
 ## Entrada
 
 - AGENTS.md y docs/arquitectura.md.
-- docs/drivers.md: el caso de uso indicado, sus flujos alternos y los EAC que lo afectan.
-- La descripción de la funcionalidad que entrega la persona.
+- docs/drivers.md: la fila del caso de uso indicado (`CU-<xx>`) en el catálogo de la sección 1,
+  sus flujos alternos y los EAC que lo afectan.
+- Lo que la persona agregue en el mensaje, si agrega algo.
 
 ## Produce
 
@@ -35,6 +36,15 @@ Característica: <nombre de la funcionalidad>
 - Cada escenario se debe poder comprobar con un sí o un no: datos concretos, nada de "rápido", "fácil" o "adecuado".
 - Usar los términos del glosario de docs/arquitectura.md.
 - Describir comportamiento, no implementación: nada de clases, tablas, pantallas ni tecnologías.
-- No inventar reglas de negocio. Si falta información, listarla al final en una sección "Preguntas abiertas".
+- No inventar reglas de negocio. Donde falte información, escribir en ese mismo lugar el
+  comentario `# [NECESITA ACLARACIÓN: <pregunta concreta>]` y seguir con lo demás
+  (con `#` delante, para que el archivo siga siendo Gherkin válido).
+- Al terminar, listar todas las marcas `[NECESITA ACLARACIÓN]` que dejó.
 - No escribir código.
 - Al terminar, detenerse y esperar revisión.
+
+## Revisión de la persona
+
+- Verificar cada escenario contra el caso de uso y completar en este mismo spec.md lo que falte.
+- Resolver cada marca `[NECESITA ACLARACIÓN]` y borrarla. La revisión termina cuando no queda ninguna.
+- Confirmar que la columna "Se especifica en" de docs/drivers.md enlaza a esta carpeta.

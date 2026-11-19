@@ -3,7 +3,7 @@
 ## Entrada
 
 - AGENTS.md y docs/arquitectura.md.
-- `specs/<NNN-nombre>/spec.md`, ya aprobado.
+- `specs/<NNN-nombre>/spec.md`, ya aprobado y sin marcas `[NECESITA ACLARACIÓN]`.
 - Los ADR, las vistas y los diagramas de secuencia que enlaza docs/arquitectura.md.
 
 ## Produce
@@ -34,6 +34,7 @@
 
 ## Reglas
 
+- Si spec.md todavía tiene marcas `[NECESITA ACLARACIÓN]`, no planear: avisar y detenerse.
 - El plan aterriza la arquitectura existente en esta funcionalidad; no la rediseña.
 - Solo componentes que existan en las vistas y tecnologías aprobadas en un ADR.
 - Si hace falta una decisión que no existe, no tomarla: registrarla en "Decisiones pendientes" y detenerse.
