@@ -68,7 +68,7 @@
 
 <!-- Aplicación: Módulo Pendientes (manejo de errores) -->
 
-- [ ] T-13 Enum EstadoTrabajo ("pendiente", "terminado", "fallido")
+- [x] T-13 Enum EstadoTrabajo ("pendiente", "terminado", "fallido")
       Archivos: src/aplicacion/pendientes/estado_trabajo.py
       Escenarios: 2, 8
       Depende de: ninguna
