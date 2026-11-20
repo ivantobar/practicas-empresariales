@@ -17,7 +17,7 @@
       Escenarios: 3
       Depende de: T-02
 
-- [ ] T-04 Entidad VersionReglas (programa, número, fecha de vigencia y requisitos; no se modifica)
+- [x] T-04 Entidad VersionReglas (programa, número, fecha de vigencia y requisitos; no se modifica)
       Archivos: src/dominio/version_reglas.py
       Escenarios: 1, 10, 11
       Depende de: T-03
