@@ -152,7 +152,7 @@
 
 <!-- Aplicación: Módulo Postulación -->
 
-- [ ] T-29 Puerto RepositorioPostulaciones (guardar, actualizar, buscar por id y listar por estudiante)
+- [x] T-29 Puerto RepositorioPostulaciones (guardar, actualizar, buscar por id y listar por estudiante)
       Archivos: src/aplicacion/postulacion/puertos/repositorio_postulaciones.py
       Escenarios: 1, 4, 5, 11
       Depende de: T-06
