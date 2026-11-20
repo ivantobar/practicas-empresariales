@@ -162,7 +162,7 @@
       Escenarios: 1, 9
       Depende de: T-10
 
-- [ ] T-31 DTO PostularseSalida (id, estado y mensaje "postulación recibida, te avisamos el resultado")
+- [x] T-31 DTO PostularseSalida (id, estado y mensaje "postulación recibida, te avisamos el resultado")
       Archivos: src/aplicacion/postulacion/postularse_salida.py
       Escenarios: 1, 5
       Depende de: T-01
