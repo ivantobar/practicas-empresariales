@@ -32,7 +32,7 @@
       Escenarios: 1, 2, 3, 4, 10, 11
       Depende de: T-01, T-03
 
-- [ ] T-07 Entidad EventoBitacora sin campos para datos personales
+- [x] T-07 Entidad EventoBitacora sin campos para datos personales
       Archivos: src/dominio/evento_bitacora.py
       Escenarios: 1, 2, 3, 9
       Depende de: ninguna
