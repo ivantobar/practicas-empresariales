@@ -51,7 +51,7 @@
 
 <!-- Aplicación: Módulo Acceso (seguridad) -->
 
-- [ ] T-10 DTO Sesion (usuario, rol y ámbito)
+- [x] T-10 DTO Sesion (usuario, rol y ámbito)
       Archivos: src/aplicacion/acceso/sesion.py
       Escenarios: 1, 9
       Depende de: ninguna
