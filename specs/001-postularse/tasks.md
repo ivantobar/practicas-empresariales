@@ -2,7 +2,7 @@
 
 <!-- Dominio -->
 
-- [ ] T-01 Enum EstadoPostulacion
+- [x] T-01 Enum EstadoPostulacion
       Archivos: src/dominio/estado_postulacion.py
       Escenarios: 1, 2, 3, 4, 11
       Depende de: ninguna
