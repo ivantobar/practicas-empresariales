@@ -130,7 +130,7 @@
       Escenarios: 2, 3, 10
       Depende de: T-23
 
-- [ ] T-25 ValidadorCreditosAprobadosMinimos (créditos aprobados ≥ exigido)
+- [x] T-25 ValidadorCreditosAprobadosMinimos (créditos aprobados ≥ exigido)
       Archivos: src/aplicacion/reglas/validadores/validador_creditos_aprobados_minimos.py
       Escenarios: 2, 3
       Depende de: T-23
