@@ -61,7 +61,7 @@
       Escenarios: 9
       Depende de: ninguna
 
-- [ ] T-12 ValidarPermiso: tabla de permisos por rol ("postularse" → estudiante), registra el permiso negado en bitácora y lanza PermisoNegado
+- [x] T-12 ValidarPermiso: tabla de permisos por rol ("postularse" → estudiante), registra el permiso negado en bitácora y lanza PermisoNegado
       Archivos: src/aplicacion/acceso/validar_permiso.py
       Escenarios: 9
       Depende de: T-09, T-10, T-11
