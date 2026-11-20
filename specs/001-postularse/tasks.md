@@ -39,7 +39,7 @@
 
 <!-- Aplicación: Módulo Bitácora -->
 
-- [ ] T-08 Puerto RegistroBitacora (solo insertar y listar)
+- [x] T-08 Puerto RegistroBitacora (solo insertar y listar)
       Archivos: src/aplicacion/bitacora/puertos/registro_bitacora.py
       Escenarios: 1, 2, 3, 9
       Depende de: T-07
