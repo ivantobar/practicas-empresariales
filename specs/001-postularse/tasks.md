@@ -157,7 +157,7 @@
       Escenarios: 1, 4, 5, 11
       Depende de: T-06
 
-- [ ] T-30 DTO PostularseEntrada (sesión, empresa y origen)
+- [x] T-30 DTO PostularseEntrada (sesión, empresa y origen)
       Archivos: src/aplicacion/postulacion/postularse_entrada.py
       Escenarios: 1, 9
       Depende de: T-10
