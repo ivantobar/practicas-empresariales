@@ -120,7 +120,7 @@
       Escenarios: 2, 3, 6, 7
       Depende de: T-05, T-21
 
-- [ ] T-23 Interfaz ValidadorRequisito
+- [x] T-23 Interfaz ValidadorRequisito
       Archivos: src/aplicacion/reglas/validador_requisito.py
       Escenarios: 2, 3
       Depende de: T-03, T-05
