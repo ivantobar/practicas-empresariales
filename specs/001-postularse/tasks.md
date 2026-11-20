@@ -73,7 +73,7 @@
       Escenarios: 2, 8
       Depende de: ninguna
 
-- [ ] T-14 TrabajoPendiente: espera creciente 1, 2, 4, 8 y máximo 15 min, y regla de las 24 h
+- [x] T-14 TrabajoPendiente: espera creciente 1, 2, 4, 8 y máximo 15 min, y regla de las 24 h
       Archivos: src/aplicacion/pendientes/trabajo_pendiente.py
       Escenarios: 1, 6, 7, 8
       Depende de: T-13
