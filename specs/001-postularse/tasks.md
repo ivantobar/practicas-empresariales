@@ -177,14 +177,14 @@
       Escenarios: 1, 4, 5, 9, 11
       Depende de: T-06, T-09, T-12, T-18, T-26, T-29, T-30, T-31, T-32
 
-- [ ] T-34 VerificarPostulacion (ManejadorTrabajo "verificar en SIA"): verifica con la versión guardada, cambia el estado, registra bitácora y "avisar al estudiante"; convierte ConsultaAcademicaFallida en FallaReintentable
+- [x] T-34 VerificarPostulacion (ManejadorTrabajo "verificar en SIA"): verifica con la versión guardada, cambia el estado, registra bitácora y "avisar al estudiante"; convierte ConsultaAcademicaFallida en FallaReintentable
       Archivos: src/aplicacion/postulacion/verificar_postulacion.py
       Escenarios: 2, 3, 6, 7, 10
       Depende de: T-06, T-09, T-15, T-16, T-18, T-21, T-28, T-29
 
 <!-- Infraestructura -->
 
-- [ ] T-35 RepositorioPostulacionesEnMemoria con threading.Lock
+- [x] T-35 RepositorioPostulacionesEnMemoria con threading.Lock
       Archivos: src/infraestructura/memoria/repositorio_postulaciones_en_memoria.py
       Escenarios: 1, 4, 5, 11
       Depende de: T-29
