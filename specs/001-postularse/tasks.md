@@ -98,7 +98,7 @@
       Escenarios: 1, 2, 3, 5, 8
       Depende de: T-14, T-17
 
-- [ ] T-19 ProcesadorPendientes.ejecutar_ciclo(ahora): ejecuta vencidos, marca terminado, reprograma o marca fallido y registra "avisar al administrador"
+- [x] T-19 ProcesadorPendientes.ejecutar_ciclo(ahora): ejecuta vencidos, marca terminado, reprograma o marca fallido y registra "avisar al administrador"
       Archivos: src/aplicacion/pendientes/procesador_pendientes.py
       Escenarios: 2, 6, 7, 8
       Depende de: T-15, T-16, T-17, T-18
