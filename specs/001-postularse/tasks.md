@@ -83,7 +83,7 @@
       Escenarios: 6, 7
       Depende de: ninguna
 
-- [ ] T-16 Interfaz ManejadorTrabajo (ejecutar(trabajo))
+- [x] T-16 Interfaz ManejadorTrabajo (ejecutar(trabajo))
       Archivos: src/aplicacion/pendientes/manejador_trabajo.py
       Escenarios: 2, 3, 6
       Depende de: T-14
