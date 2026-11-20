@@ -44,7 +44,7 @@
       Escenarios: 1, 2, 3, 9
       Depende de: T-07
 
-- [ ] T-09 RegistrarEvento: arma el evento con la fecha actual y lo inserta
+- [x] T-09 RegistrarEvento: arma el evento con la fecha actual y lo inserta
       Archivos: src/aplicacion/bitacora/registrar_evento.py
       Escenarios: 1, 2, 3, 9
       Depende de: T-07, T-08
