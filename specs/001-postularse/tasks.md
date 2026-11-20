@@ -12,7 +12,7 @@
       Escenarios: 3
       Depende de: ninguna
 
-- [ ] T-03 Objeto de valor Requisito (tipo y valor exigido)
+- [x] T-03 Objeto de valor Requisito (tipo y valor exigido)
       Archivos: src/dominio/requisito.py
       Escenarios: 3
       Depende de: T-02
