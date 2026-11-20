@@ -22,7 +22,7 @@
       Escenarios: 1, 10, 11
       Depende de: T-03
 
-- [ ] T-05 Objeto de valor DatosAcademicos (promedio y créditos aprobados)
+- [x] T-05 Objeto de valor DatosAcademicos (promedio y créditos aprobados)
       Archivos: src/dominio/datos_academicos.py
       Escenarios: 2, 3, 10
       Depende de: ninguna
