@@ -105,7 +105,7 @@
 
 <!-- Aplicación: Módulo Reglas -->
 
-- [ ] T-20 Puerto RepositorioReglas (buscar versiones de reglas de un programa)
+- [x] T-20 Puerto RepositorioReglas (buscar versiones de reglas de un programa)
       Archivos: src/aplicacion/reglas/puertos/repositorio_reglas.py
       Escenarios: 1, 10, 11
       Depende de: T-04
