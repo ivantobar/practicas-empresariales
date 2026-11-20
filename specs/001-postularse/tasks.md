@@ -204,7 +204,7 @@
       Escenarios: 1, 2, 3, 9
       Depende de: T-08
 
-- [ ] T-39 ConsultaAcademicaSimulada: datos por estudiante, demora y error configurables, contador de consultas, corte a 5 s con concurrent.futures y traducción de fallas a ConsultaAcademicaFallida
+- [x] T-39 ConsultaAcademicaSimulada: datos por estudiante, demora y error configurables, contador de consultas, corte a 5 s con concurrent.futures y traducción de fallas a ConsultaAcademicaFallida
       Archivos: src/infraestructura/sia/consulta_academica_simulada.py
       Escenarios: 1, 2, 3, 4, 5, 6, 7, 10
       Depende de: T-21, T-22
