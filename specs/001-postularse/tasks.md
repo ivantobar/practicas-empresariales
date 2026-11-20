@@ -145,7 +145,7 @@
       Escenarios: 2, 3
       Depende de: T-03
 
-- [ ] T-28 VerificarRequisitos: consulta el SIA y aplica los validadores de la versión dada; deja pasar ConsultaAcademicaFallida
+- [x] T-28 VerificarRequisitos: consulta el SIA y aplica los validadores de la versión dada; deja pasar ConsultaAcademicaFallida
       Archivos: src/aplicacion/reglas/verificar_requisitos.py
       Escenarios: 2, 3, 6, 7, 10
       Depende de: T-20, T-22, T-24, T-25, T-27
