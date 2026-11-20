@@ -189,7 +189,7 @@
       Escenarios: 1, 4, 5, 11
       Depende de: T-29
 
-- [ ] T-36 RepositorioReglasEnMemoria
+- [x] T-36 RepositorioReglasEnMemoria
       Archivos: src/infraestructura/memoria/repositorio_reglas_en_memoria.py
       Escenarios: 1, 10, 11
       Depende de: T-20
