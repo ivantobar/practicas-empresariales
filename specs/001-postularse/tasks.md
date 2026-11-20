@@ -110,7 +110,7 @@
       Escenarios: 1, 10, 11
       Depende de: T-04
 
-- [ ] T-21 Error ConsultaAcademicaFallida (SIA caído, lento o con error)
+- [x] T-21 Error ConsultaAcademicaFallida (SIA caído, lento o con error)
       Archivos: src/aplicacion/reglas/consulta_academica_fallida.py
       Escenarios: 6, 7
       Depende de: ninguna
