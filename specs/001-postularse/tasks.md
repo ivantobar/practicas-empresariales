@@ -194,7 +194,7 @@
       Escenarios: 1, 10, 11
       Depende de: T-20
 
-- [ ] T-37 ColaPendientesEnMemoria con threading.Lock
+- [x] T-37 ColaPendientesEnMemoria con threading.Lock
       Archivos: src/infraestructura/memoria/cola_pendientes_en_memoria.py
       Escenarios: 1, 5, 6, 7, 8
       Depende de: T-17
