@@ -221,7 +221,7 @@
       Escenarios: 1, 4, 9, 11
       Depende de: T-40
 
-- [ ] T-42 main.py: ejecución con datos de ejemplo y hora simulada de los escenarios del procesador (2, 3, 6, 7, 8 y 10) y de los 30 estudiantes a la vez (5)
+- [x] T-42 main.py: ejecución con datos de ejemplo y hora simulada de los escenarios del procesador (2, 3, 6, 7, 8 y 10) y de los 30 estudiantes a la vez (5)
       Archivos: src/main.py
       Escenarios: 2, 3, 5, 6, 7, 8, 10
       Depende de: T-41

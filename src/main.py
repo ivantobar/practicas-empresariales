@@ -13,26 +13,34 @@ y la ejecución con datos de ejemplo de los escenarios de specs/001 (DP-03 del p
     python src/main.py aplicacion    -> aplicación
     python src/main.py procesador    -> procesador de pendientes, un ciclo cada minuto
 
-Los escenarios del flujo de la petición (1, 4, 9 y 11) imprimen cada verificación con
-"[cumple]" o "[NO cumple]"; esa salida es la evidencia de validacion.md. Si alguna
-verificación falla, el proceso termina con código 1.
+Los 11 escenarios imprimen cada verificación con "[cumple]" o "[NO cumple]"; esa salida
+es la evidencia de validacion.md. Si alguna verificación falla, el proceso termina con
+código 1. Los del flujo de la petición (1, 4, 9 y 11) llaman a Postularse; los del
+procesador (2, 3, 6, 7, 8 y 10) llaman a ejecutar_ciclo(ahora) con hora simulada: "ahora"
+es la hora de creación del trabajo más los minutos simulados, así 24 h corren en segundos.
+Solo el primer intento del escenario 6 espera de verdad los 5 s del corte del SIA. El
+escenario 5 lanza 30 postulaciones al mismo tiempo en hilos y mide cada respuesta.
 
 Como no hay base de datos (DT-01), cada punto de entrada tiene su propia memoria: el
 procesador solo ve los trabajos que se registran en su mismo proceso.
 """
 
 import sys
+import threading
 import time
 from collections.abc import Iterable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, fields
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from aplicacion.acceso.permiso_negado import PermisoNegado
 from aplicacion.acceso.sesion import Sesion
 from aplicacion.acceso.validar_permiso import ValidarPermiso
 from aplicacion.bitacora.registrar_evento import RegistrarEvento
+from aplicacion.pendientes.estado_trabajo import EstadoTrabajo
 from aplicacion.pendientes.procesador_pendientes import ProcesadorPendientes
 from aplicacion.pendientes.registrar_trabajo import RegistrarTrabajo
+from aplicacion.pendientes.trabajo_pendiente import TrabajoPendiente
 from aplicacion.postulacion.postulacion_activa_existente import PostulacionActivaExistente
 from aplicacion.postulacion.postularse import Postularse
 from aplicacion.postulacion.postularse_entrada import PostularseEntrada
@@ -407,11 +415,389 @@ def escenario_11(resultados: list[bool]) -> None:
     )
 
 
+# ---------------------------------------------------------------------------
+# Escenarios del procesador con hora simulada (T-42): 2, 3, 6, 7, 8 y 10, y el 5
+# ---------------------------------------------------------------------------
+
+
+def trabajos_de(sistema: Composicion, tipo: str, referencia: str) -> list[TrabajoPendiente]:
+    return [t for t in sistema.cola_pendientes.listar() if t.tipo == tipo and t.referencia == referencia]
+
+
+def postular_ejemplo(sistema: Composicion) -> tuple[str, TrabajoPendiente]:
+    """Dado: la postulación de "E-1001" en "pendiente de verificación" y su trabajo "verificar en SIA"."""
+    postulacion_id = sistema.postularse.ejecutar(entrada_postulacion(sesion_estudiante())).id
+    (trabajo,) = trabajos_de(sistema, VerificarPostulacion.TIPO_VERIFICAR_EN_SIA, postulacion_id)
+    return postulacion_id, trabajo
+
+
+def trabajo_actual(sistema: Composicion, trabajo_id: str) -> TrabajoPendiente:
+    (trabajo,) = [t for t in sistema.cola_pendientes.listar() if t.id == trabajo_id]
+    return trabajo
+
+
+def estado_de(sistema: Composicion, postulacion_id: str) -> EstadoPostulacion | None:
+    postulacion = sistema.repositorio_postulaciones.buscar_por_id(postulacion_id)
+    return postulacion.estado if postulacion is not None else None
+
+
+def escenario_2(resultados: list[bool]) -> None:
+    print("Escenario 2. El SIA responde y el estudiante cumple los requisitos")
+    sistema = armar_con_antecedentes()  # El SIA devuelve para "E-1001" promedio 3.8 y créditos 140.
+    postulacion_id, trabajo = postular_ejemplo(sistema)
+
+    inicio = time.perf_counter()
+    sistema.procesador_pendientes.ejecutar_ciclo(trabajo.creado_en)
+    duracion = time.perf_counter() - inicio
+
+    verificar(
+        resultados,
+        f"el SIA responde en menos de 5 segundos (ciclo de {duracion:.3f} s)",
+        sistema.consulta_academica.consultas == 1 and duracion < 5,
+    )
+    verificar(
+        resultados,
+        'la postulación pasa a "verificada"',
+        estado_de(sistema, postulacion_id) is EstadoPostulacion.VERIFICADA,
+    )
+    eventos = sistema.registro_bitacora.listar()
+    verificar(
+        resultados,
+        'queda un evento de bitácora del cambio de "pendiente de verificación" a "verificada"',
+        any(
+            e.sobre_que == postulacion_id
+            and e.que == "cambio de 'pendiente de verificación' a 'verificada'"
+            for e in eventos
+        ),
+    )
+    verificar(
+        resultados,
+        'queda registrado un trabajo pendiente para avisar el resultado a "E-1001"',
+        len(trabajos_de(sistema, VerificarPostulacion.TIPO_AVISAR_AL_ESTUDIANTE, postulacion_id)) == 1,
+    )
+    consultas_antes = sistema.consulta_academica.consultas
+    sistema.procesador_pendientes.ejecutar_ciclo(trabajo.creado_en + timedelta(minutes=30))
+    verificar(
+        resultados,
+        'el trabajo "verificar en SIA" queda terminado y no se vuelve a ejecutar '
+        f"(consultas al SIA: {consultas_antes} antes y {sistema.consulta_academica.consultas} "
+        "después de otro ciclo)",
+        trabajo_actual(sistema, trabajo.id).estado is EstadoTrabajo.TERMINADO
+        and sistema.consulta_academica.consultas == consultas_antes,
+    )
+
+
+def escenario_3(resultados: list[bool]) -> None:
+    print("Escenario 3. El SIA responde y el estudiante no cumple los requisitos")
+    sistema = armar_con_antecedentes()
+    sistema.consulta_academica.configurar_datos(
+        ESTUDIANTE_EJEMPLO, DatosAcademicos(promedio=3.2, creditos_aprobados=140)
+    )
+    postulacion_id, trabajo = postular_ejemplo(sistema)
+
+    inicio = time.perf_counter()
+    sistema.procesador_pendientes.ejecutar_ciclo(trabajo.creado_en)
+    duracion = time.perf_counter() - inicio
+
+    verificar(
+        resultados,
+        f"el SIA responde en menos de 5 segundos (ciclo de {duracion:.3f} s)",
+        sistema.consulta_academica.consultas == 1 and duracion < 5,
+    )
+    postulacion = sistema.repositorio_postulaciones.buscar_por_id(postulacion_id)
+    verificar(
+        resultados,
+        'la postulación pasa a "no cumple requisitos"',
+        postulacion is not None and postulacion.estado is EstadoPostulacion.NO_CUMPLE_REQUISITOS,
+    )
+    incumplidos = postulacion.requisitos_incumplidos if postulacion is not None else ()
+    verificar(
+        resultados,
+        'el resultado indica que no se cumplió "promedio mínimo" (exigido 3.5)',
+        Requisito(TipoRequisito.PROMEDIO_MINIMO, 3.5) in incumplidos,
+    )
+    verificar(
+        resultados,
+        'el resultado no marca como incumplido "créditos aprobados mínimos"',
+        all(r.tipo is not TipoRequisito.CREDITOS_APROBADOS_MINIMOS for r in incumplidos),
+    )
+    verificar(
+        resultados,
+        'queda un evento de bitácora del cambio de "pendiente de verificación" a "no cumple requisitos"',
+        any(
+            e.sobre_que == postulacion_id
+            and e.que == "cambio de 'pendiente de verificación' a 'no cumple requisitos'"
+            for e in sistema.registro_bitacora.listar()
+        ),
+    )
+    verificar(
+        resultados,
+        'queda registrado un trabajo pendiente para avisar el resultado a "E-1001"',
+        len(trabajos_de(sistema, VerificarPostulacion.TIPO_AVISAR_AL_ESTUDIANTE, postulacion_id)) == 1,
+    )
+
+
+ESTUDIANTES_PICO = 30
+LIMITE_CONFIRMACION_SEGUNDOS = 3
+
+
+def escenario_5(resultados: list[bool]) -> None:
+    print("Escenario 5. EAC-02: confirmación en menos de 3 segundos con el SIA caído en el pico")
+    # El SIA no responde: si alguien lo consultara, esperaría hasta el corte de 5 s.
+    sia = ConsultaAcademicaSimulada(demora_segundos=60)
+    sistema = armar(versiones=[version_reglas_3()], consulta_academica=sia)
+    estudiantes = [f"E-{2001 + i}" for i in range(ESTUDIANTES_PICO)]
+    salida_al_mismo_tiempo = threading.Barrier(ESTUDIANTES_PICO)
+
+    def postular(estudiante: str) -> tuple[str, str, float]:
+        sesion = Sesion(usuario=estudiante, rol="estudiante", ambito=PROGRAMA_EJEMPLO)
+        salida_al_mismo_tiempo.wait()
+        inicio = time.perf_counter()
+        salida = sistema.postularse.ejecutar(entrada_postulacion(sesion))
+        return salida.id, salida.mensaje, time.perf_counter() - inicio
+
+    with ThreadPoolExecutor(max_workers=ESTUDIANTES_PICO) as ejecutor:
+        respuestas = list(ejecutor.map(postular, estudiantes))
+
+    guardadas = [
+        p
+        for estudiante in estudiantes
+        for p in sistema.repositorio_postulaciones.listar_por_estudiante(estudiante)
+    ]
+    verificar(
+        resultados,
+        f'quedan guardadas 30 postulaciones en "pendiente de verificación" (hay {len(guardadas)})',
+        len(guardadas) == ESTUDIANTES_PICO
+        and all(p.estado is EstadoPostulacion.PENDIENTE_DE_VERIFICACION for p in guardadas),
+    )
+    ids = {id for id, _, _ in respuestas}
+    trabajos = [
+        t for t in sistema.cola_pendientes.listar()
+        if t.tipo == VerificarPostulacion.TIPO_VERIFICAR_EN_SIA and t.referencia in ids
+    ]
+    verificar(
+        resultados,
+        f'quedan registrados 30 trabajos pendientes "verificar en SIA" (hay {len(trabajos)})',
+        len(trabajos) == ESTUDIANTES_PICO,
+    )
+    a_tiempo = [
+        d for _, mensaje, d in respuestas
+        if mensaje == "postulación recibida, te avisamos el resultado" and d < LIMITE_CONFIRMACION_SEGUNDOS
+    ]
+    porcentaje = 100 * len(a_tiempo) / ESTUDIANTES_PICO
+    mas_lenta = max(d for _, _, d in respuestas)
+    verificar(
+        resultados,
+        f"al menos 95% recibe la confirmación en menos de 3 s ({porcentaje:.0f}%, "
+        f"la más lenta en {mas_lenta:.3f} s; consultas al SIA: {sia.consultas})",
+        porcentaje >= 95,
+    )
+    perdidas = [id for id in ids if sistema.repositorio_postulaciones.buscar_por_id(id) is None]
+    verificar(
+        resultados,
+        f"0 postulaciones se pierden ({len(perdidas)} perdidas, {len(ids)} ids distintos)",
+        not perdidas and len(ids) == ESTUDIANTES_PICO,
+    )
+
+
+def escenario_6(resultados: list[bool]) -> None:
+    print("Escenario 6. EAC-02: el SIA no responde en 5 segundos durante la verificación")
+    sistema = armar_con_antecedentes()
+    sistema.consulta_academica.configurar_demora(6)  # Tarda más de 5 s.
+    postulacion_id, trabajo = postular_ejemplo(sistema)
+    creado_en = trabajo.creado_en
+
+    inicio = time.perf_counter()
+    sistema.procesador_pendientes.ejecutar_ciclo(creado_en)
+    duracion = time.perf_counter() - inicio
+
+    verificar(
+        resultados,
+        f"la espera por el SIA se corta a los 5 segundos (el ciclo duró {duracion:.3f} s)",
+        # Tolerancia de 0.5 s a cada lado: el reloj del corte y el de la medición no coinciden exacto.
+        4.5 <= duracion < 5.5,
+    )
+    verificar(
+        resultados,
+        'la postulación sigue en "pendiente de verificación"',
+        estado_de(sistema, postulacion_id) is EstadoPostulacion.PENDIENTE_DE_VERIFICACION,
+    )
+    despues = trabajo_actual(sistema, trabajo.id)
+    verificar(
+        resultados,
+        "el trabajo queda reprogramado para dentro de 1 minuto",
+        despues.estado is EstadoTrabajo.PENDIENTE
+        and despues.proximo_intento == creado_en + timedelta(minutes=1),
+    )
+
+    # Los siguientes intentos también fallan: para no esperar 5 s reales en cada uno,
+    # el SIA simulado responde con error, que también es ConsultaAcademicaFallida.
+    sistema.consulta_academica.configurar_demora(0)
+    sistema.consulta_academica.configurar_error(True)
+    minutos_de_intento = [0]
+    intentos = despues.intentos_fallidos
+    for minuto in range(1, 61):  # Un ciclo por minuto simulado durante 1 h.
+        sistema.procesador_pendientes.ejecutar_ciclo(creado_en + timedelta(minutes=minuto))
+        actual = trabajo_actual(sistema, trabajo.id)
+        if actual.intentos_fallidos > intentos:
+            intentos = actual.intentos_fallidos
+            minutos_de_intento.append(minuto)
+    esperas = [b - a for a, b in zip(minutos_de_intento, minutos_de_intento[1:])]
+    verificar(
+        resultados,
+        f"los siguientes intentos se reprograman a 1, 2, 4, 8, 15, 15, ... minutos (esperas: {esperas})",
+        esperas == [1, 2, 4, 8, 15, 15, 15],
+    )
+    verificar(
+        resultados,
+        f"ninguna espera entre intentos es mayor de 15 minutos (máxima: {max(esperas)})",
+        max(esperas) <= 15,
+    )
+
+
+def escenario_7(resultados: list[bool]) -> None:
+    print("Escenario 7. EAC-02: el SIA responde con error y luego se recupera")
+    sistema = armar_con_antecedentes()  # Al recuperarse devuelve promedio 3.8 y créditos 140.
+    sistema.consulta_academica.configurar_error(True)
+    postulacion_id, trabajo = postular_ejemplo(sistema)
+    creado_en = trabajo.creado_en
+
+    siempre_guardada = True
+    minutos_con_error = 3 * 60
+    for minuto in range(0, minutos_con_error + 1):  # 3 h con error, un ciclo por minuto.
+        sistema.procesador_pendientes.ejecutar_ciclo(creado_en + timedelta(minutes=minuto))
+        siempre_guardada = siempre_guardada and (
+            estado_de(sistema, postulacion_id) is EstadoPostulacion.PENDIENTE_DE_VERIFICACION
+        )
+    intentos_con_error = trabajo_actual(sistema, trabajo.id).intentos_fallidos
+
+    # El SIA se recupera justo después del intento del minuto 180.
+    sistema.consulta_academica.configurar_error(False)
+    minutos_hasta_verificar = None
+    for minuto in range(1, 61):
+        sistema.procesador_pendientes.ejecutar_ciclo(
+            creado_en + timedelta(minutes=minutos_con_error + minuto)
+        )
+        if estado_de(sistema, postulacion_id) is EstadoPostulacion.VERIFICADA:
+            minutos_hasta_verificar = minuto
+            break
+
+    verificar(
+        resultados,
+        'la postulación pasa a "verificada" en máximo 30 minutos desde que el SIA se recuperó '
+        f"(a los {minutos_hasta_verificar} min)",
+        minutos_hasta_verificar is not None and minutos_hasta_verificar <= 30,
+    )
+    verificar(
+        resultados,
+        'durante las 3 horas la postulación nunca dejó de estar guardada en "pendiente de verificación" '
+        f"({intentos_con_error} intentos con error)",
+        siempre_guardada and intentos_con_error > 0,
+    )
+    verificar(
+        resultados,
+        "0 postulaciones se pierden",
+        len(sistema.repositorio_postulaciones.listar_por_estudiante(ESTUDIANTE_EJEMPLO)) == 1,
+    )
+
+
+def escenario_8(resultados: list[bool]) -> None:
+    print("Escenario 8. EAC-02: la verificación no se logra en 24 horas")
+    sistema = armar_con_antecedentes()
+    sistema.consulta_academica.configurar_error(True)
+    postulacion_id, trabajo = postular_ejemplo(sistema)
+    creado_en = trabajo.creado_en
+    minutos_24_horas = 24 * 60
+
+    for minuto in range(0, minutos_24_horas):  # Lleva 24 h fallando, un ciclo por minuto.
+        sistema.procesador_pendientes.ejecutar_ciclo(creado_en + timedelta(minutes=minuto))
+    antes = trabajo_actual(sistema, trabajo.id)
+    verificar(
+        resultados,
+        f'antes de las 24 h el trabajo sigue "pendiente" ({antes.intentos_fallidos} intentos fallidos)',
+        antes.estado is EstadoTrabajo.PENDIENTE,
+    )
+
+    # Siguiente ciclo del procesador, a las 24 h.
+    sistema.procesador_pendientes.ejecutar_ciclo(creado_en + timedelta(minutes=minutos_24_horas))
+    consultas_al_fallar = sistema.consulta_academica.consultas
+    for minuto in range(1, 61):  # Una hora más de ciclos.
+        sistema.procesador_pendientes.ejecutar_ciclo(
+            creado_en + timedelta(minutes=minutos_24_horas + minuto)
+        )
+    verificar(
+        resultados,
+        'el trabajo "verificar en SIA" queda "fallido" y no se vuelve a intentar '
+        f"(consultas al SIA: {consultas_al_fallar} al fallar y {sistema.consulta_academica.consultas} "
+        "una hora después)",
+        trabajo_actual(sistema, trabajo.id).estado is EstadoTrabajo.FALLIDO
+        and sistema.consulta_academica.consultas == consultas_al_fallar,
+    )
+    verificar(
+        resultados,
+        "queda registrado un trabajo pendiente para avisar al administrador del sistema",
+        len(trabajos_de(sistema, ProcesadorPendientes.TIPO_AVISAR_AL_ADMINISTRADOR, trabajo.id)) == 1,
+    )
+    verificar(
+        resultados,
+        'la postulación sigue guardada en "pendiente de verificación"',
+        estado_de(sistema, postulacion_id) is EstadoPostulacion.PENDIENTE_DE_VERIFICACION,
+    )
+
+
+def escenario_10(resultados: list[bool]) -> None:
+    print("Escenario 10. EAC-01: la postulación se verifica con la versión de reglas con la que se hizo")
+    # La versión 4 (promedio mínimo 4.0) entra en vigencia mañana, después de postularse.
+    vigencia_version_4 = date.today() + timedelta(days=1)
+    version_4 = VersionReglas(
+        programa=PROGRAMA_EJEMPLO,
+        numero=4,
+        fecha_vigencia=vigencia_version_4,
+        requisitos=(Requisito(TipoRequisito.PROMEDIO_MINIMO, 4.0),),
+    )
+    sia = ConsultaAcademicaSimulada(
+        datos={ESTUDIANTE_EJEMPLO: DatosAcademicos(promedio=3.8, creditos_aprobados=140)}
+    )
+    sistema = armar(versiones=[version_reglas_3(), version_4], consulta_academica=sia)
+    postulacion_id, trabajo = postular_ejemplo(sistema)
+
+    # El trabajo se ejecuta con hora simulada del día en que ya rige la versión 4.
+    ahora = datetime.combine(vigencia_version_4, trabajo.creado_en.time())
+    vigente = ObtenerVersionVigente(sistema.repositorio_reglas).ejecutar(
+        programa=PROGRAMA_EJEMPLO, fecha=ahora.date()
+    )
+    verificar(
+        resultados,
+        f"al ejecutar el trabajo ya rige la versión 4 (vigente el {ahora.date().isoformat()}: {vigente.numero})",
+        vigente.numero == 4,
+    )
+    sistema.procesador_pendientes.ejecutar_ciclo(ahora)
+
+    postulacion = sistema.repositorio_postulaciones.buscar_por_id(postulacion_id)
+    verificar(
+        resultados,
+        'la postulación se verifica contra la versión 3 y pasa a "verificada" '
+        "(con la versión 4 no cumpliría: 3.8 < 4.0)",
+        postulacion is not None and postulacion.estado is EstadoPostulacion.VERIFICADA,
+    )
+    verificar(
+        resultados,
+        "la postulación sigue con la versión de reglas 3",
+        postulacion is not None and postulacion.numero_version_reglas == 3,
+    )
+
+
 def ejecutar_escenarios() -> bool:
-    """Ejecuta los escenarios con datos de ejemplo; devuelve True si todos se cumplen."""
+    """Ejecuta los 11 escenarios con datos de ejemplo; devuelve True si todos se cumplen."""
     resultados: list[bool] = []
-    print("specs/001-postularse: escenarios del flujo de la petición (1, 4, 9 y 11)")
-    for escenario in (escenario_1, escenario_4, escenario_9, escenario_11):
+    print("specs/001-postularse: escenarios con datos de ejemplo")
+    print("  flujo de la petición: 1, 4, 9 y 11; procesador con hora simulada: 2, 3, 6, 7, 8 y 10;")
+    print("  30 estudiantes a la vez: 5")
+    escenarios = (
+        escenario_1, escenario_2, escenario_3,escenario_4, escenario_5,escenario_6, escenario_7, escenario_8,  escenario_9, escenario_10,
+        escenario_11,
+    )
+    for escenario in escenarios:
         print()
         escenario(resultados)
     cumplidas = sum(resultados)
