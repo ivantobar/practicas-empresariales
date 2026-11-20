@@ -78,7 +78,7 @@
       Escenarios: 1, 6, 7, 8
       Depende de: T-13
 
-- [ ] T-15 Error FallaReintentable
+- [x] T-15 Error FallaReintentable
       Archivos: src/aplicacion/pendientes/falla_reintentable.py
       Escenarios: 6, 7
       Depende de: ninguna
