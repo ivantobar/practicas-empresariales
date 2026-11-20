@@ -211,12 +211,12 @@
 
 <!-- Composición -->
 
-- [ ] T-40 main.py: armar adaptadores, módulos y casos de uso; registrar VerificarPostulacion para "verificar en SIA"; puntos de entrada de la aplicación y del procesador
+- [x] T-40 main.py: armar adaptadores, módulos y casos de uso; registrar VerificarPostulacion para "verificar en SIA"; puntos de entrada de la aplicación y del procesador
       Archivos: src/main.py
       Escenarios: 2, 3, 6, 7, 8
       Depende de: T-19, T-33, T-34, T-35, T-36, T-37, T-38, T-39
 
-- [ ] T-41 main.py: ejecución con datos de ejemplo de los escenarios del flujo de la petición (1, 4, 9 y 11)
+- [x] T-41 main.py: ejecución con datos de ejemplo de los escenarios del flujo de la petición (1, 4, 9 y 11)
       Archivos: src/main.py
       Escenarios: 1, 4, 9, 11
       Depende de: T-40
