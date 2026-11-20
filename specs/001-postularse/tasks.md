@@ -140,7 +140,7 @@
       Escenarios: 1, 10, 11
       Depende de: T-20
 
-- [ ] T-27 DTO ResultadoVerificacion (si cumple y requisitos incumplidos con su valor exigido)
+- [x] T-27 DTO ResultadoVerificacion (si cumple y requisitos incumplidos con su valor exigido)
       Archivos: src/aplicacion/reglas/resultado_verificacion.py
       Escenarios: 2, 3
       Depende de: T-03
