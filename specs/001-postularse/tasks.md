@@ -135,7 +135,7 @@
       Escenarios: 2, 3
       Depende de: T-23
 
-- [ ] T-26 ObtenerVersionVigente: versión de mayor fecha de vigencia menor o igual a la fecha dada
+- [x] T-26 ObtenerVersionVigente: versión de mayor fecha de vigencia menor o igual a la fecha dada
       Archivos: src/aplicacion/reglas/obtener_version_vigente.py
       Escenarios: 1, 10, 11
       Depende de: T-20
