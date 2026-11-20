@@ -172,7 +172,7 @@
       Escenarios: 4
       Depende de: ninguna
 
-- [ ] T-33 Caso de uso Postularse: permiso, postulación activa, versión vigente, guardar, trabajo "verificar en SIA", bitácora y respuesta; sin consultar el SIA
+- [x] T-33 Caso de uso Postularse: permiso, postulación activa, versión vigente, guardar, trabajo "verificar en SIA", bitácora y respuesta; sin consultar el SIA
       Archivos: src/aplicacion/postulacion/postularse.py
       Escenarios: 1, 4, 5, 9, 11
       Depende de: T-06, T-09, T-12, T-18, T-26, T-29, T-30, T-31, T-32
