@@ -125,7 +125,7 @@
       Escenarios: 2, 3
       Depende de: T-03, T-05
 
-- [ ] T-24 ValidadorPromedioMinimo (promedio ≥ exigido)
+- [x] T-24 ValidadorPromedioMinimo (promedio ≥ exigido)
       Archivos: src/aplicacion/reglas/validadores/validador_promedio_minimo.py
       Escenarios: 2, 3, 10
       Depende de: T-23
