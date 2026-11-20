@@ -93,7 +93,7 @@
       Escenarios: 1, 5, 6, 8
       Depende de: T-14
 
-- [ ] T-18 RegistrarTrabajo: crea un trabajo listo para ejecutarse de inmediato y lo guarda
+- [x] T-18 RegistrarTrabajo: crea un trabajo listo para ejecutarse de inmediato y lo guarda
       Archivos: src/aplicacion/pendientes/registrar_trabajo.py
       Escenarios: 1, 2, 3, 5, 8
       Depende de: T-14, T-17
