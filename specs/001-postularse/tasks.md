@@ -27,7 +27,7 @@
       Escenarios: 2, 3, 10
       Depende de: ninguna
 
-- [ ] T-06 Entidad Postulacion con esta_activa() y transiciones válidas solo desde "pendiente de verificación"
+- [x] T-06 Entidad Postulacion con esta_activa() y transiciones válidas solo desde "pendiente de verificación"
       Archivos: src/dominio/postulacion.py
       Escenarios: 1, 2, 3, 4, 10, 11
       Depende de: T-01, T-03
