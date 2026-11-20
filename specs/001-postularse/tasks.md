@@ -228,7 +228,7 @@
 
 <!-- Validación -->
 
-- [ ] T-43 Validación escenario por escenario con la evidencia de python src/main.py y revisión de la regla de dependencia (R-07)
+- [x] T-43 Validación escenario por escenario con la evidencia de python src/main.py y revisión de la regla de dependencia (R-07)
       Archivos: specs/001-postularse/validacion.md
       Escenarios: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
       Depende de: T-42
