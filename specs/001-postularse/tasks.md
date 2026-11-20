@@ -115,7 +115,7 @@
       Escenarios: 6, 7
       Depende de: ninguna
 
-- [ ] T-22 Puerto ConsultaAcademica (consultar(estudiante) -> DatosAcademicos, espera máxima de 5 s)
+- [x] T-22 Puerto ConsultaAcademica (consultar(estudiante) -> DatosAcademicos, espera máxima de 5 s)
       Archivos: src/aplicacion/reglas/puertos/consulta_academica.py
       Escenarios: 2, 3, 6, 7
       Depende de: T-05, T-21
