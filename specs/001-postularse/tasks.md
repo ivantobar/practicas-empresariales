@@ -167,7 +167,7 @@
       Escenarios: 1, 5
       Depende de: T-01
 
-- [ ] T-32 Error PostulacionActivaExistente ("ya tienes una postulación en curso")
+- [x] T-32 Error PostulacionActivaExistente ("ya tienes una postulación en curso")
       Archivos: src/aplicacion/postulacion/postulacion_activa_existente.py
       Escenarios: 4
       Depende de: ninguna
