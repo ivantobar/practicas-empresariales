@@ -199,7 +199,7 @@
       Escenarios: 1, 5, 6, 7, 8
       Depende de: T-17
 
-- [ ] T-38 RegistroBitacoraEnMemoria, solo inserción, con threading.Lock
+- [x] T-38 RegistroBitacoraEnMemoria, solo inserción, con threading.Lock
       Archivos: src/infraestructura/memoria/registro_bitacora_en_memoria.py
       Escenarios: 1, 2, 3, 9
       Depende de: T-08
