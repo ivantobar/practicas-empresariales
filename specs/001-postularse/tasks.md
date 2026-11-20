@@ -88,7 +88,7 @@
       Escenarios: 2, 3, 6
       Depende de: T-14
 
-- [ ] T-17 Puerto ColaPendientes (guardar, actualizar, listar y tomar vencidos a una hora dada)
+- [x] T-17 Puerto ColaPendientes (guardar, actualizar, listar y tomar vencidos a una hora dada)
       Archivos: src/aplicacion/pendientes/puertos/cola_pendientes.py
       Escenarios: 1, 5, 6, 8
       Depende de: T-14
