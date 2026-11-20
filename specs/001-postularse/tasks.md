@@ -56,7 +56,7 @@
       Escenarios: 1, 9
       Depende de: ninguna
 
-- [ ] T-11 Error PermisoNegado
+- [x] T-11 Error PermisoNegado
       Archivos: src/aplicacion/acceso/permiso_negado.py
       Escenarios: 9
       Depende de: ninguna
