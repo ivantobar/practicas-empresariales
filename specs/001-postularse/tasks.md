@@ -7,7 +7,7 @@
       Escenarios: 1, 2, 3, 4, 11
       Depende de: ninguna
 
-- [ ] T-02 Enum TipoRequisito
+- [x] T-02 Enum TipoRequisito
       Archivos: src/dominio/tipo_requisito.py
       Escenarios: 3
       Depende de: ninguna
